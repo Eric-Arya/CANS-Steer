@@ -1,0 +1,115 @@
+model_config: configs/model.yaml
+domain: hallucination
+benchmark: truthfulqa
+sft:
+  data: samples/baselines/hallucination/sft.jsonl
+  count: 108
+  format: chat
+  target: response
+  epochs: 15
+  checkpoint_every: 3
+  seed: 112
+  learning_rate: 5.0e-05
+  weight_decay: 0.0
+  scheduler: constant
+  effective_batch_size: 16
+  microbatch_size: 16
+  gradient_checkpointing: false
+  max_grad_norm: null
+  rank: 8
+  lora_alpha: 16
+  dropout: 0.0
+sn_tune:
+  data: samples/baselines/hallucination/sn_tune.jsonl
+  count: 108
+  identification_data: samples/baselines/hallucination/sn_identification.jsonl
+  identification_count: 108
+  format: chat
+  cap: 25
+  top_attn: 100
+  top_ffn: 200
+  epochs: 20
+  checkpoint_every: 1
+  seed: 112
+  learning_rate: 1.0e-06
+  weight_decay: 0.0
+  scheduler: cosine
+  warmup_ratio: 0.05
+  max_grad_norm: 0.3
+  max_length: 512
+  effective_batch_size: 32
+  microbatch_size: 8
+  gradient_checkpointing: false
+  strengths:
+  - 1
+  - 2
+  - 3
+  - 4
+dpo:
+  data: samples/baselines/hallucination/pairs.jsonl
+  count: 108
+  format: chat
+  epochs: 3
+  checkpoint_every: 1
+  seed: 112
+  learning_rate: 0.001
+  weight_decay: 0.1
+  scheduler: cosine
+  warmup_ratio: 0.0
+  max_grad_norm: 1.0
+  effective_batch_size: 64
+  microbatch_size: 4
+  gradient_checkpointing: false
+  beta: 0.1
+  max_length: 4096
+  max_prompt_length: 2048
+dap:
+  data: samples/baselines/hallucination/dap_identification.jsonl
+  count: 200
+  format: chat
+  max_new_tokens: 256
+  top_fraction: 0.05
+  exclude_last_layer: true
+aura:
+  data: samples/baselines/hallucination/aura.jsonl
+  count: 216
+  format: chat
+  response_pool_limit: null
+  text_only: false
+caa:
+  data: samples/baselines/hallucination/caa_pairs.jsonl
+  count: 108
+  format: chat
+  selection_data: samples/baselines/hallucination/caa_selection.jsonl
+  selected_layer: 11
+  strengths:
+  - 0.5
+  - 1
+  - 1.5
+  - 2.0
+  selection_strength: 1.0
+h_neurons:
+  data: samples/baselines/hallucination/h_neurons.jsonl
+  count: 216
+  format: chat
+  split: samples/baselines/hallucination/h_split.json
+  selection_data: samples/baselines/hallucination/caa_selection.jsonl
+  lambda_search: adaptive
+  paper_neuron_count: 127
+  multipliers:
+  - 0.0
+  - 0.25
+  - 0.5
+  - 0.75
+  selection_protocol: Joint review of held-out classifier accuracy and domain benchmark
+    subset; no capability metrics
+  selected_lambda: 0.0503148713619
+grad_only:
+  config: configs/hallucination.yaml
+  k: 1000
+  strengths:
+  - 0.1
+  - 0.2
+  - 0.3
+  - 0.4
+  - 0.5

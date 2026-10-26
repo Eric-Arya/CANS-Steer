@@ -1,0 +1,479 @@
+{
+  "model": "Qwen/Qwen3-4B",
+  "files": {
+    "samples/baselines/safety/pairs.jsonl": {
+      "sha256": "1dd168723879a8a86028f777b7b3e8acafddf8cd1ae8d40a6168c6f8fc6be920",
+      "rows": 256,
+      "sources": [
+        {
+          "path": "dataset/projects/iclr_neuron/safety_neuron/training/dpo/circuit_breakers_train_first256_qwen3_4b_native_chat_char_matched_dpo_v3.jsonl",
+          "sha256": "785e304402a1763bed371dc55f735074929221665f4faaf37257994c8556b692"
+        }
+      ]
+    },
+    "samples/baselines/toxicity/pairs.jsonl": {
+      "sha256": "6e13fe388d44588b2abd8578dc7d16bb4673195a8d4c160ce3a29501751a9ef2",
+      "rows": 500,
+      "sources": [
+        {
+          "path": "dataset/rtp_onpolicy_shared/qwen3_4b_raw_n25_prompt_toxic_first_pairs500_aura_clean2000_v2/dpo_preferences.jsonl",
+          "sha256": "7c0c887cda0be635bfe0b35c3914252732b9143fbbdbd200e16f1b31f88231d7"
+        }
+      ]
+    },
+    "samples/baselines/hallucination/pairs.jsonl": {
+      "sha256": "1e9599b6ef9c9036a2f7cbabbff5dddf86c8504d0994b14f1e0f062db46cacd6",
+      "rows": 108,
+      "sources": [
+        {
+          "path": "dataset/hallucination_shared/qwen3_4b_truthfulqa_local_judge_mixed108_v1/dpo_preferences_108.jsonl",
+          "sha256": "0e740f550be8531654f91f5da96545d36cb3ee1b8d96df2334c5c515d4af507d"
+        }
+      ]
+    },
+    "samples/baselines/safety/caa_pairs.jsonl": {
+      "sha256": "2b09c677400473d066e6f595b708540c8b66537e882be0e5ce1ecbbf6ce9a018",
+      "rows": 256,
+      "sources": [
+        {
+          "path": "dataset/projects/iclr_neuron/safety_neuron/training/circuit_breakers_train.json",
+          "sha256": "a56c1d5d7ccbd3ddc9238779957af9ba9bf497816acea3f060b33f8ce83652d5"
+        }
+      ],
+      "transformation": {
+        "response_length_matching": "both responses hard-truncated to the shorter Python Unicode character length",
+        "prompt_unchanged": true,
+        "strip_or_normalize": false
+      }
+    },
+    "samples/baselines/toxicity/caa_pairs.jsonl": {
+      "sha256": "b85c05947927f3ce035e491149548cb706d61288ca5b35c4b8e3f9431b978a2e",
+      "rows": 500,
+      "sources": [
+        {
+          "path": "dataset/rtp_onpolicy_shared/qwen3_4b_raw_n25_prompt_toxic_first_pairs500_aura_clean2000_v2/caa_pairs.jsonl",
+          "sha256": "8bcb57259525b5cd39a454e3ad73b3e9935f74627869b1095ab159559d72d469"
+        }
+      ]
+    },
+    "samples/baselines/hallucination/caa_pairs.jsonl": {
+      "sha256": "cc7235ea98869e6688ed22d36e9297f49eada2ec9e09d246d79ac76e4730a368",
+      "rows": 108,
+      "sources": [
+        {
+          "path": "dataset/hallucination_shared/qwen3_4b_truthfulqa_local_judge_mixed108_v1/caa_pairs_108.jsonl",
+          "sha256": "978e5099f8b810144e637a5c674387d131f61d6695302aae664d37d585e8013e"
+        }
+      ]
+    },
+    "samples/baselines/safety/sft.jsonl": {
+      "sha256": "9e50e183a05ae38d133a103d248d4b3445a912ffef4cebac857c02d1891595ea",
+      "rows": 256,
+      "sources": [
+        {
+          "path": "samples/safety.jsonl",
+          "sha256": "9e50e183a05ae38d133a103d248d4b3445a912ffef4cebac857c02d1891595ea"
+        }
+      ]
+    },
+    "samples/baselines/toxicity/sft.jsonl": {
+      "sha256": "9360f1e8662ce9e15738e56057e8cc023e6baa9b5fef3a005da24689745be9cc",
+      "rows": 500,
+      "sources": [
+        {
+          "path": "dataset/rtp_onpolicy_shared/qwen3_4b_raw_n25_prompt_toxic_first_pairs500_aura_clean2000_v2/caa_pairs.jsonl",
+          "sha256": "8bcb57259525b5cd39a454e3ad73b3e9935f74627869b1095ab159559d72d469"
+        }
+      ]
+    },
+    "samples/baselines/hallucination/sft.jsonl": {
+      "sha256": "fe52db0f8470199a8eb6a302df49ca54d6c01dfd53918bd44cf465480201d0ef",
+      "rows": 108,
+      "sources": [
+        {
+          "path": "samples/hallucination.jsonl",
+          "sha256": "fe52db0f8470199a8eb6a302df49ca54d6c01dfd53918bd44cf465480201d0ef"
+        }
+      ]
+    },
+    "samples/baselines/safety/sn_tune.jsonl": {
+      "sha256": "935b501e5ec02d44b41eb283fd303bca2453f5941c7879324c1c6739eea54b0f",
+      "rows": 256,
+      "sources": [
+        {
+          "path": "dataset/projects/iclr_neuron/safety_neuron/training/circuit_breakers_train.json",
+          "sha256": "a56c1d5d7ccbd3ddc9238779957af9ba9bf497816acea3f060b33f8ce83652d5"
+        }
+      ]
+    },
+    "samples/baselines/toxicity/sn_tune.jsonl": {
+      "sha256": "9360f1e8662ce9e15738e56057e8cc023e6baa9b5fef3a005da24689745be9cc",
+      "rows": 500,
+      "sources": [
+        {
+          "path": "dataset/rtp_onpolicy_shared/qwen3_4b_raw_n25_prompt_toxic_first_pairs500_aura_clean2000_v2/caa_pairs.jsonl",
+          "sha256": "8bcb57259525b5cd39a454e3ad73b3e9935f74627869b1095ab159559d72d469"
+        }
+      ]
+    },
+    "samples/baselines/hallucination/sn_tune.jsonl": {
+      "sha256": "eebad6e82abeb3aa24da873e7beabad2c48cabfdd35d51ddfa6d35996a28c3d5",
+      "rows": 108,
+      "sources": [
+        {
+          "path": "dataset/hallucination_shared/qwen3_4b_truthfulqa_local_judge_mixed108_v1/sn_tune_training_true_info108.jsonl",
+          "sha256": "0e45b8a63844bdb2496a0baaf44c6faca6df33959acd63fbd3a4d3d1f4bed689"
+        }
+      ]
+    },
+    "samples/baselines/safety/sn_identification.jsonl": {
+      "sha256": "ea33ae814edd34dfb88fc4b55a8f0f62363e8da03409767e6419a29260328066",
+      "rows": 200,
+      "sources": [
+        {
+          "path": "unified_eval/results/qwen3_4b/safety/sn_tune_raw_identification_v2/metadata.json",
+          "sha256": "d1ff40987c77f7320c89333c2d09db9123b36c21699fb56d3f900e5e3f584d5e"
+        }
+      ]
+    },
+    "samples/baselines/toxicity/sn_identification.jsonl": {
+      "sha256": "a08347d6d81a93365c10c0f8a55804e9894c7e453bc5db71b16264c74effaa80",
+      "rows": 200,
+      "sources": [
+        {
+          "path": "dataset/toxicity_sntune_identification_raw_high_toxic_n200_v1/identification_prompts_raw_gt0p5_n200.jsonl",
+          "sha256": "604028e57ce619a235e02f2edbf7d6a5cff1524ceb77f50f7582f2a944e383aa"
+        }
+      ]
+    },
+    "samples/baselines/hallucination/sn_identification.jsonl": {
+      "sha256": "0949698a14df6bebea1ea74a4628a3ab84877ffeb0df48e286bdf13bf1355301",
+      "rows": 108,
+      "sources": [
+        {
+          "path": "dataset/hallucination_shared/qwen3_4b_truthfulqa_local_judge_mixed108_v1/sn_tune_identification_false108.jsonl",
+          "sha256": "0949698a14df6bebea1ea74a4628a3ab84877ffeb0df48e286bdf13bf1355301"
+        }
+      ]
+    },
+    "samples/baselines/safety/dap_identification.jsonl": {
+      "sha256": "dbbf343a5d7741c887b6f143f30e6ff1c7119877d0ac4415c97be4e49d8a7732",
+      "rows": 200,
+      "sources": [
+        {
+          "path": "dataset/projects/neurips_neuron/identification/safety_sncorpus_post_dpo_n200_v3.jsonl",
+          "sha256": "2115c82741b291bc4cc4c0a5f6abc494f498314edd9c0e747802f5e08e7e10dc"
+        }
+      ]
+    },
+    "samples/baselines/toxicity/dap_identification.jsonl": {
+      "sha256": "7d8e2adacc8f313355e64a4eddfe1a9b39499131660a63acc9d8ed9db4bc710b",
+      "rows": 200,
+      "sources": [
+        {
+          "path": "dataset/projects/neurips_neuron/identification/toxicity_rtp_shared_raw_post_dpo_high_toxic_n200_v1.jsonl",
+          "sha256": "aaaf251edfe80c890a51c71a349519fb990965753115cb42e8ea8a1d0157baec"
+        }
+      ]
+    },
+    "samples/baselines/hallucination/dap_identification.jsonl": {
+      "sha256": "4390633ccb93c3853e5306c097b5ccc001dfb60c2eb1b1f86eb5656cf05e6a79",
+      "rows": 200,
+      "sources": [
+        {
+          "path": "dataset/hallucination_shared/qwen3_4b_truthfulqa_local_judge_mixed108_v1/dpo_patch_identification_prompts_200.jsonl",
+          "sha256": "4390633ccb93c3853e5306c097b5ccc001dfb60c2eb1b1f86eb5656cf05e6a79"
+        }
+      ]
+    },
+    "samples/baselines/safety/aura.jsonl": {
+      "sha256": "16af7ca4b842b12cda8ab73ac88717399c6981cb02b46e3d980adf84dbe18159",
+      "rows": 1280,
+      "sources": [
+        {
+          "path": "dataset/projects/iclr_neuron/safety_neuron/training/circuit_breakers_train.json",
+          "sha256": "a56c1d5d7ccbd3ddc9238779957af9ba9bf497816acea3f060b33f8ce83652d5"
+        }
+      ]
+    },
+    "samples/baselines/toxicity/aura.jsonl": {
+      "sha256": "f1b272569a547c3dc7fb049a758b98ff2d925da35fa8bf97af1dc1e2c2fcb055",
+      "rows": 2500,
+      "sources": [
+        {
+          "path": "dataset/rtp_onpolicy_shared/qwen3_4b_raw_n25_prompt_toxic_first_pairs500_aura_clean2000_v2/aura_selection.jsonl",
+          "sha256": "37e558f6930e167c083b9be2cf01594feeaf2941a8d15c2853d39e4cea26895b"
+        }
+      ]
+    },
+    "samples/baselines/hallucination/aura.jsonl": {
+      "sha256": "df03041f441f510b6b1c14628ff96a129fa6cf445c0876bccdcde93b0e48c022",
+      "rows": 216,
+      "sources": [
+        {
+          "path": "dataset/hallucination_shared/qwen3_4b_truthfulqa_local_judge_mixed108_v1/aura_false43_true_info173.jsonl",
+          "sha256": "83806cc0afec92f687be41b96ff6c05291d4c01c52dd49aa81937b152170044a"
+        }
+      ]
+    },
+    "samples/baselines/toxicity/aura_jigsaw.jsonl": {
+      "sha256": "ed5c7899bb23d7b2c77807356a019c9ecf3061df894c885e5dc08a61ee033aa0",
+      "rows": 2500,
+      "sources": [
+        {
+          "path": "dataset/aura_jigsaw_2500/qwen3_4b_raw_aura_selection_v1.jsonl",
+          "sha256": "df1bda76d75ea95c75f5aa9b523edd6046915254d51603c1a7a1672f7597ded4"
+        }
+      ]
+    },
+    "samples/baselines/safety/h_neurons.jsonl": {
+      "sha256": "7c0f27c7daf9a65c67d2932ce6e367b918a37e2b23ec80ee23856ca01305286a",
+      "rows": 512,
+      "sources": [
+        {
+          "path": "dataset/H-Neurons/qwen3_4b_safety_h_neurons_grad_safe256_minimax_unsafe256_minimalspan_v2/corpus.jsonl",
+          "sha256": "d84899b63b8cead07eb2f200102ba98dc418f9058e6490d93fd018f62ca61bff"
+        }
+      ]
+    },
+    "samples/baselines/safety/h_split.json": {
+      "sha256": "74b214d2e39f540859b00e07836eb09fc83ac5a9c2a12d1dfff2a90c430ba36e",
+      "rows": null,
+      "sources": [
+        {
+          "path": "dataset/H-Neurons/qwen3_4b_safety_h_neurons_grad_safe256_minimax_unsafe256_minimalspan_v2/classifier_split_seed42_heldout20pct/train_qids.json",
+          "sha256": "6acba1ab82376485416a58ea062d025714aaa95609867f625275c1f40df64a3e"
+        },
+        {
+          "path": "dataset/H-Neurons/qwen3_4b_safety_h_neurons_grad_safe256_minimax_unsafe256_minimalspan_v2/classifier_split_seed42_heldout20pct/heldout_qids.json",
+          "sha256": "1f2ba110a0330b2dc304666b33b1401bf93ef16de50d221affec20e24b19df62"
+        }
+      ]
+    },
+    "samples/baselines/toxicity/h_neurons.jsonl": {
+      "sha256": "78dccd028e15a1253ec40d88101550e72bd64c3eb89ec017afe9c9c8f6b06d98",
+      "rows": 1000,
+      "sources": [
+        {
+          "path": "dataset/H-Neurons/qwen3_4b_toxicity_raw_mixed500_codex_v1/corpus.jsonl",
+          "sha256": "87cf6129cf65f722a0c7c7a0d895720cb4e951ca44b269a23d3a846bce1777f3"
+        }
+      ]
+    },
+    "samples/baselines/toxicity/h_split.json": {
+      "sha256": "845866454b0d15224d2ba3028499c34c8872a4fa9c39d564c37f2ebf68dd49a2",
+      "rows": null,
+      "sources": [
+        {
+          "path": "unified_eval/results/qwen3_4b/toxicity/current_protocol_v3/h_neuron_raw_mixed500_codex_v1/classifier_split_seed42_heldout20pct/train_qids.json",
+          "sha256": "97aa00f9f646e664f935973ad285363d4f0413c00b3f70ead051023138978a53"
+        },
+        {
+          "path": "unified_eval/results/qwen3_4b/toxicity/current_protocol_v3/h_neuron_raw_mixed500_codex_v1/classifier_split_seed42_heldout20pct/heldout_qids.json",
+          "sha256": "7ad2dc104a687204c6a87d055a1ba019bcd49e287a6bcb3e5ba85f3591e67a8d"
+        }
+      ]
+    },
+    "samples/baselines/hallucination/h_neurons.jsonl": {
+      "sha256": "9d73c1be52e0c92afa2b003fef82dfa508e3961350a6b1d83bc51094a675792e",
+      "rows": 216,
+      "sources": [
+        {
+          "path": "dataset/hallucination_shared/qwen3_4b_truthfulqa_short_spans_true108_false108_h_neuron_v2/corpus_true108_false108.jsonl",
+          "sha256": "8f93be730e771a6c7f0a3603b550ba16d9ccdf06cc43152b77afc1e3818f6cba"
+        }
+      ]
+    },
+    "samples/baselines/hallucination/h_split.json": {
+      "sha256": "5230853e6315c37ea46a91ee6cdf31678647dce7f712e3f94cd0094af76d0a3b",
+      "rows": null,
+      "sources": [
+        {
+          "path": "dataset/hallucination_shared/qwen3_4b_truthfulqa_short_spans_true108_false108_h_neuron_v2/split.json",
+          "sha256": "f8ead960dabed7623b9ec97b15dbb98984d9d3ca796edc8294bd6728403e269a"
+        }
+      ]
+    },
+    "samples/baselines/safety/provenance/review_audit.jsonl": {
+      "sha256": "3b6abe23a630c96054b30fcf73c033224fd885918517e1407179b5fb0f12bffe",
+      "rows": 918,
+      "sources": [
+        {
+          "path": "dataset/H-Neurons/qwen3_4b_safety_h_neurons_grad_safe256_minimax_unsafe256_minimalspan_v2/review_audit.jsonl",
+          "sha256": "3b6abe23a630c96054b30fcf73c033224fd885918517e1407179b5fb0f12bffe"
+        }
+      ]
+    },
+    "samples/baselines/safety/provenance/minimax_unsafe_span_localization.jsonl": {
+      "sha256": "6d48745dfcde69b12ec77e263d638f99149f02387337f0972725ef7849d89e58",
+      "rows": 256,
+      "sources": [
+        {
+          "path": "dataset/H-Neurons/qwen3_4b_safety_h_neurons_grad_safe256_minimax_unsafe256_minimalspan_v2/minimax_unsafe_span_localization.jsonl",
+          "sha256": "6d48745dfcde69b12ec77e263d638f99149f02387337f0972725ef7849d89e58"
+        }
+      ]
+    },
+    "samples/baselines/hallucination/provenance/codex_span_decisions_true108_false108.jsonl": {
+      "sha256": "2d8b9e896d1a5fb084c0722dbfb5d692e168db89c815fafa66a27d8b3fcde343",
+      "rows": 216,
+      "sources": [
+        {
+          "path": "dataset/hallucination_shared/qwen3_4b_truthfulqa_local_judge_mixed108_v1/codex_span_decisions_true108_false108.jsonl",
+          "sha256": "2d8b9e896d1a5fb084c0722dbfb5d692e168db89c815fafa66a27d8b3fcde343"
+        }
+      ]
+    },
+    "samples/baselines/safety/caa_selection.jsonl": {
+      "sha256": "482bc0b56626f5981293a74abb299c5cb526c1922246efcb0daf555944957feb",
+      "rows": 200,
+      "sources": [
+        {
+          "path": "dataset/projects/neurips_neuron/harmbench/splits/table1_seed42_n200.jsonl",
+          "sha256": "bb5b29ff9db15e420021aee3ad1a07d0ed1ca11a2d8faff024d786168b7be74c"
+        }
+      ]
+    },
+    "samples/baselines/toxicity/caa_selection.jsonl": {
+      "sha256": "50b1ab08669bbed79403e49bf658c1266f03e466fcf607e1c69a69ad25fe2993",
+      "rows": 100,
+      "sources": [
+        {
+          "path": "dataset/aura_eval/full/rtp_seed42_selection_n100_v1/subset100.jsonl",
+          "sha256": "586ce83b016681864415cdef53b9b045d0715430932220393e7bf1f63b75e4e5"
+        }
+      ]
+    },
+    "samples/baselines/hallucination/caa_selection.jsonl": {
+      "sha256": "b720f58bc69218933c1371ed4d8821dc0d4b4d97c79d5c5a5f319ede834f6949",
+      "rows": 100,
+      "sources": [
+        {
+          "path": "unified_eval/results/llama31/hallucination/current_protocol_v5/truthfulqa_subset100_seed42/subset100.jsonl",
+          "sha256": "51ce7435507a208fdceafa4bfce8a820e49f37fdfcf560379d5ec72d0d03f344"
+        }
+      ]
+    },
+    "samples/baselines/toxicity/provenance/master_pool.jsonl": {
+      "sha256": "f8ec94f38b1f232ff7b415d74edda69d913d16a38f58184f6b8ffaa0fbfc81af",
+      "rows": 2503,
+      "sources": [
+        {
+          "path": "dataset/rtp_onpolicy_shared/qwen3_4b_raw_n25_prompt_toxic_first_pairs500_aura_clean2000_v2/master_pool.jsonl",
+          "sha256": "f8ec94f38b1f232ff7b415d74edda69d913d16a38f58184f6b8ffaa0fbfc81af"
+        }
+      ]
+    },
+    "samples/baselines/safety/provenance/selected_h_neurons.json": {
+      "sha256": "cd9ed9a2fb778b377de1d63131dc3fadd8cb3f03550518257435424047cba3dc",
+      "rows": null,
+      "sources": [
+        {
+          "path": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/selected_tradeoff.json",
+          "sha256": "2ce2dc15493cbb1fb8d291abc59f69ba9b88a10e0c176e76b68837215be13878"
+        }
+      ]
+    },
+    "samples/baselines/toxicity/provenance/selected_h_neurons.json": {
+      "sha256": "e4e7810bb91d94bbb892cafea84588674c158952eb9d15d491e08cf251c994ff",
+      "rows": null,
+      "sources": [
+        {
+          "path": "unified_eval/results/qwen3_4b/toxicity/current_protocol_v3/h_neuron_raw_mixed500_codex_v1/manual_lambda_selection.json",
+          "sha256": "e2afc8c5d1137b2ad2883d394f24659013313d2a7b5e49c412075345dfa99f9d"
+        }
+      ]
+    },
+    "samples/baselines/hallucination/provenance/selected_h_neurons.json": {
+      "sha256": "14ed871861c0042f77776c8aec6b74edd441e0c1956f4ab1da7e73ca253806b1",
+      "rows": null,
+      "sources": [
+        {
+          "path": "unified_eval/results/qwen3_4b/hallucination/short_spans_true108_false108_h_neuron_v2/selected.json",
+          "sha256": "710bd01619a8c8a1398420a2f0769a85c4a824fb0045a441d1d2af6920a069a3"
+        }
+      ]
+    },
+    "samples/baselines/safety/heldout_prompts.jsonl": {
+      "sha256": "b2a0485c322485bd69f8df7343a70d466a0412141e0c3855554321254794c463",
+      "rows": 102,
+      "sources": [
+        {
+          "path": "dataset/H-Neurons/qwen3_4b_safety_h_neurons_grad_safe256_minimax_unsafe256_minimalspan_v2/corpus.jsonl",
+          "sha256": "d84899b63b8cead07eb2f200102ba98dc418f9058e6490d93fd018f62ca61bff"
+        },
+        {
+          "path": "dataset/H-Neurons/qwen3_4b_safety_h_neurons_grad_safe256_minimax_unsafe256_minimalspan_v2/classifier_split_seed42_heldout20pct/train_qids.json",
+          "sha256": "6acba1ab82376485416a58ea062d025714aaa95609867f625275c1f40df64a3e"
+        },
+        {
+          "path": "dataset/H-Neurons/qwen3_4b_safety_h_neurons_grad_safe256_minimax_unsafe256_minimalspan_v2/classifier_split_seed42_heldout20pct/heldout_qids.json",
+          "sha256": "1f2ba110a0330b2dc304666b33b1401bf93ef16de50d221affec20e24b19df62"
+        }
+      ]
+    },
+    "samples/baselines/toxicity/heldout_prompts.jsonl": {
+      "sha256": "403d5e68e67921f93756df41f19a57268f50f6b06d10420b76dbfe3c4d5b9563",
+      "rows": 100,
+      "sources": [
+        {
+          "path": "dataset/H-Neurons/qwen3_4b_toxicity_raw_mixed500_codex_v1/corpus.jsonl",
+          "sha256": "87cf6129cf65f722a0c7c7a0d895720cb4e951ca44b269a23d3a846bce1777f3"
+        },
+        {
+          "path": "unified_eval/results/qwen3_4b/toxicity/current_protocol_v3/h_neuron_raw_mixed500_codex_v1/classifier_split_seed42_heldout20pct/train_qids.json",
+          "sha256": "97aa00f9f646e664f935973ad285363d4f0413c00b3f70ead051023138978a53"
+        },
+        {
+          "path": "unified_eval/results/qwen3_4b/toxicity/current_protocol_v3/h_neuron_raw_mixed500_codex_v1/classifier_split_seed42_heldout20pct/heldout_qids.json",
+          "sha256": "7ad2dc104a687204c6a87d055a1ba019bcd49e287a6bcb3e5ba85f3591e67a8d"
+        }
+      ]
+    },
+    "samples/baselines/hallucination/heldout_prompts.jsonl": {
+      "sha256": "ea3353eb676e7c8b4008087b798bfb12bef6de42a09ba4f01dddf191599ba1ed",
+      "rows": 37,
+      "sources": [
+        {
+          "path": "dataset/hallucination_shared/qwen3_4b_truthfulqa_short_spans_true108_false108_h_neuron_v2/corpus_true108_false108.jsonl",
+          "sha256": "8f93be730e771a6c7f0a3603b550ba16d9ccdf06cc43152b77afc1e3818f6cba"
+        },
+        {
+          "path": "dataset/hallucination_shared/qwen3_4b_truthfulqa_short_spans_true108_false108_h_neuron_v2/split.json",
+          "sha256": "f8ead960dabed7623b9ec97b15dbb98984d9d3ca796edc8294bd6728403e269a"
+        }
+      ]
+    },
+    "samples/baselines/safety/provenance/dap_identification_manifest.json": {
+      "sha256": "252840285388d23587ceda40bfeb2a986d5c09211304a132c7a419c7e1d5056a",
+      "rows": null,
+      "sources": [
+        {
+          "path": "dataset/projects/neurips_neuron/identification/safety_sncorpus_post_dpo_n200_v3.manifest.json",
+          "sha256": "2028214adaebeb8b9684e1820378bd42da79ce2f3680317ee3b2a8732427f973"
+        }
+      ]
+    },
+    "samples/baselines/toxicity/provenance/dap_identification_manifest.json": {
+      "sha256": "b7c364e5645c16abb81559bb9c3380c942c4b73c3e1a5c713cf8f6d42ecf659e",
+      "rows": null,
+      "sources": [
+        {
+          "path": "dataset/projects/neurips_neuron/identification/toxicity_rtp_shared_raw_post_dpo_high_toxic_n200_v1.manifest.json",
+          "sha256": "6e4383fe2b284d23ca80ac10c208438be6510ab02a4a74da9623e2736eb20a25"
+        }
+      ]
+    },
+    "samples/baselines/hallucination/provenance/dap_identification_manifest.json": {
+      "sha256": "cd44f0825094a58b906258ba24d7113a058eaa24c05f290b7b8c9264288ed231",
+      "rows": null,
+      "sources": [
+        {
+          "path": "dataset/hallucination_shared/qwen3_4b_truthfulqa_local_judge_mixed108_v1/dpo_patch_identification_manifest.json",
+          "sha256": "24b530ac5ac03b448dcd00c8c9a519df61eb1eb6ebcfc08e2859c960cf6e1f59"
+        }
+      ]
+    }
+  },
+  "scope": "Qwen3 only; frozen existing responses, labels, spans, and splits; no regeneration"
+}

@@ -1,0 +1,160 @@
+{
+  "schema": 1,
+  "model": "Qwen/Qwen3-4B",
+  "files": [
+    {
+      "path": "cans/artifacts/fisher.pt",
+      "sha256": "e93f888a5913ab62ed6870e0b315922c0ece60b8b7eb72a56f9d6aedbd2a124a",
+      "bytes": 4204917
+    },
+    {
+      "path": "cans/artifacts/hallucination.pt",
+      "sha256": "aa7759d98ac8ffadab237921aa1c80c9fd32ab4cf552c508a9290c3102c38cee",
+      "bytes": 4205293
+    },
+    {
+      "path": "cans/artifacts/safety.pt",
+      "sha256": "d681f6cd7677e1aa2650476509074cd5ca13cc8690028496f969b7b589eddeb9",
+      "bytes": 4205173
+    },
+    {
+      "path": "cans/artifacts/toxicity.pt",
+      "sha256": "77ce55fafa57fa80676152317484d89647cfdd6c71c8e45422f12a23c3239a54",
+      "bytes": 4205253
+    },
+    {
+      "path": "samples/benchmarks/bbh.jsonl",
+      "sha256": "96f4b47c08070d76a8efe863b75237cfcf748701b031eed346ee7d56a006378c",
+      "bytes": 601364
+    },
+    {
+      "path": "samples/benchmarks/harmbench.jsonl",
+      "sha256": "3983868481706435cfe5feb00431e6c82e7e108eb7cd7e800ee35d3b2bf0bd43",
+      "bytes": 640058
+    },
+    {
+      "path": "samples/benchmarks/ifeval.jsonl",
+      "sha256": "1ba6251bab5f1c6773cc4d4681d4f97d9c972b24758443045af7f135837231bc",
+      "bytes": 382459
+    },
+    {
+      "path": "samples/benchmarks/mmlu.jsonl",
+      "sha256": "a58e7902c3feb01f067e70acc85816e832b8929b976671a27f6f687e098c6c87",
+      "bytes": 1748159
+    },
+    {
+      "path": "samples/benchmarks/rtp.jsonl",
+      "sha256": "12ec36526720dccefbb4d997faa82d1c5bb9f7ec0a42787f802b8c02858874e5",
+      "bytes": 170180
+    },
+    {
+      "path": "samples/benchmarks/truthfulqa.jsonl",
+      "sha256": "469fb97aa1900d67b576e93647b20785f2021e4c611bff37d93b79a2126a306b",
+      "bytes": 647321
+    },
+    {
+      "path": "samples/hallucination.jsonl",
+      "sha256": "fe52db0f8470199a8eb6a302df49ca54d6c01dfd53918bd44cf465480201d0ef",
+      "bytes": 119074
+    },
+    {
+      "path": "samples/ifeval_scorer.zip",
+      "sha256": "c712cd4f3307d0338783faaa3d64f815bded6b01bafa245cc89825f6a31f814b",
+      "bytes": 25695
+    },
+    {
+      "path": "samples/reference.jsonl",
+      "sha256": "0af9c62bbcfbf02a8aef6df78ca341687dad6ac42ed101383e55fb0eca995b84",
+      "bytes": 8598667
+    },
+    {
+      "path": "samples/safety.jsonl",
+      "sha256": "9e50e183a05ae38d133a103d248d4b3445a912ffef4cebac857c02d1891595ea",
+      "bytes": 401084
+    },
+    {
+      "path": "samples/toxicity.jsonl",
+      "sha256": "27b23314de72d7361a4ab5dc49d75f29a71ea6806e719f3e0761c293af2d88e9",
+      "bytes": 186306
+    }
+  ],
+  "provenance": {
+    "samples/safety.jsonl": {
+      "source": "projects/iclr_neuron/safety_neuron/training/circuit_breakers_train_qwen3_4b_raw_bf16_greedy256_refusal_substring_safe256/safe_responses.jsonl",
+      "sha256": "470d9ae69d931c4a9d43c253141fd53382f689f1f0b97f464daf0210f5e1899d"
+    },
+    "samples/toxicity.jsonl": {
+      "source": "rtp_grad_qwen3_4b_raw_shared_n25_toxiccue_broad_v2/selected_clear_cues.jsonl",
+      "sha256": "28e7a745353b6c661819ddd005248d5434c3eae22becd36b819bfd14d557b912"
+    },
+    "samples/hallucination.jsonl": {
+      "source": "hallucination_shared/qwen3_4b_truthfulqa_positive108_short_spans_v3/grad_positive_spans_108.jsonl",
+      "sha256": "77dfd624943604a0c0ea6415d0d6ac9071426bdcbee8e65e9aec4e750c0e2eb2"
+    },
+    "samples/reference.jsonl": {
+      "source": "wikitext/wikitext-2-raw-v1/qwen3_4b_raw_seed42_n1024_c4_response64_v1/continuations.jsonl",
+      "sha256": "f546bb13b2c9e7b6a4b461181072c7eafc74ad54488423593f9b994098d0ecb1"
+    },
+    "cans/artifacts/fisher.pt": {
+      "source": "results/qwen3_4b/model_only/wikitext_raw_seed42_n1024_c4_response64_whole_response_v1/merged/fisher.pt",
+      "sha256": "e011c33d90be0f691d4acbe5c8013517d09967034a6235d33affd440fe98e5d5"
+    },
+    "cans/artifacts/safety.pt": {
+      "source": "results/qwen3_4b/safety/grad_uniform/merged/gradients/all_neurons_mean_gradient.csv",
+      "sha256": "ae7bc76543840a059c517ee51b2b46e734bd36433a3e1350e3beb326bf580624"
+    },
+    "cans/artifacts/toxicity.pt": {
+      "source": "results/qwen3_4b/toxicity/raw_grad_shared_n25_toxiccue_broad_v2/merged/gradients/all_neurons_mean_gradient.csv",
+      "sha256": "f95f991f0376b0e894edf21190ca27e11a383c3abf5b24004097295d4307e904"
+    },
+    "cans/artifacts/hallucination.pt": {
+      "source": "results/qwen3_4b/hallucination/short_spans_v3_f5_bbh_tqa_v1/grad/merged/gradients/g_summary.pt",
+      "sha256": "5efabaae7076728b8be148dad038d7e1656a4487a3b3aafca0033c8fd3386612"
+    },
+    "samples/benchmarks/harmbench.jsonl": {
+      "source": "results/qwen3_4b/safety/wikitext_whole_response_fisher_same_f1_f5_full_v1/eval/full/WF5/harmbench/responses.jsonl",
+      "sha256": "7951b4172b043a6e97bfeedbbd56e3c86f2530a256254a0260c28d8bf95a196d"
+    },
+    "samples/benchmarks/rtp.jsonl": {
+      "source": "results/qwen3_4b/toxicity/wikitext_whole_response_fisher_same_f1_f5_full_v1/eval/full/WF5/rtp/responses.jsonl",
+      "sha256": "d324e73e3f715486a1e68581c6a3990264b543e6b20fd49e24be109653e1f777"
+    },
+    "samples/benchmarks/truthfulqa.jsonl": {
+      "source": "results/qwen3_4b/hallucination/wikitext_whole_response_fisher_same_f1_f5_full_v1/eval/full/W1/truthfulqa_freeform/responses.jsonl",
+      "sha256": "f788177d8b6bdd331a8e238a8a3bb047ac44dfa36f05b8a471c64f5aadeee08f"
+    },
+    "samples/benchmarks/ifeval.jsonl": {
+      "source": "results/qwen3_4b/safety/wikitext_whole_response_fisher_same_f1_f5_full_v1/eval/full/WF5/ifeval/responses.jsonl",
+      "sha256": "75220a49eab87a530c2555504c9568af6156cac7870f0b04622a5ca489d84071"
+    },
+    "samples/benchmarks/bbh.jsonl": {
+      "source": "results/qwen3_4b/safety/wikitext_whole_response_fisher_same_f1_f5_full_v1/eval/full/WF5/bbh/responses.jsonl",
+      "sha256": "8c0808f48722426fba71532177f58d7b3ebf731505fb35affe4d6dcf3c5a67af"
+    },
+    "samples/benchmarks/mmlu.jsonl": {
+      "source": "results/qwen3_4b/safety/wikitext_whole_response_fisher_same_f1_f5_full_v1/eval/full/WF5/mmlu/responses.jsonl",
+      "sha256": "e85d91e571293f4dfd57381c83ab878217dd7c85254d92e22f4402f78e4032b2"
+    }
+  },
+  "reference_protocol": {
+    "prompts": 1024,
+    "continuations_per_prompt": 4,
+    "prompt_tokens": 128,
+    "max_response_tokens": 64,
+    "prompt_format": "raw, no BOS, no chat template",
+    "sampling_temperature": 1.0,
+    "top_p": 1.0,
+    "generation_dtype": "float32 (frozen sampling; evaluation is BF16)",
+    "selection_seed": 42
+  },
+  "dependencies": {
+    "lm_eval": {
+      "url": "https://github.com/EleutherAI/lm-evaluation-harness.git",
+      "revision": "8a07e1110d060de48cfc7a9a7987b7659060b60b"
+    },
+    "harmbench": {
+      "url": "https://github.com/centerforaisafety/HarmBench.git",
+      "revision": "8e1604d1171fe8a48d8febecd22f600e462bdcdd"
+    }
+  }
+}

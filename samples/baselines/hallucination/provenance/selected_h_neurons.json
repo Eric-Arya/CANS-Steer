@@ -1,0 +1,50 @@
+{
+  "candidate": {
+    "C": 19.87483964347828,
+    "classifier_model": "unified_eval/results/qwen3_4b/hallucination/short_spans_true108_false108_h_neuron_v2/classifier/classifiers/lambda_0p0503148713619.pkl",
+    "classifier_model_sha256": "e02f6a8b6be5bd417a22dd9bb6baf8d998f6c00d3cf9aa779d101033b973e08a",
+    "effective_lambda": 0.0503148713619,
+    "heldout_classifier": {
+      "accuracy": 0.75,
+      "auroc": 0.8016528925619835,
+      "rows": 44
+    },
+    "id": "L4",
+    "multiplier": 0,
+    "positive_h_neurons": 127,
+    "positive_ratio_per_mille": null,
+    "ranking": "unified_eval/results/qwen3_4b/hallucination/short_spans_true108_false108_h_neuron_v2/classifier/rankings/lambda_0p0503148713619.csv",
+    "ranking_sha256": "68b6ff415c11df817f280f7942aebb97f457b92c904f5a9a327d971bc2cbf3fd",
+    "source_report": "unified_eval/results/qwen3_4b/hallucination/short_spans_true108_false108_h_neuron_v2/classifier/candidates/lambda_0p0503148713619.json",
+    "source_report_sha256": "aa5aa8483bd43d984439c4f48e75f4c225000ff803c732dcd7dedbcf0d7cce77",
+    "tqa100": {
+      "extraction_protocol": "truthfulqa_current_question_answer_interval_v2",
+      "false_count": 30,
+      "info_count": 93,
+      "info_percent": 93.0,
+      "judged_count": 100,
+      "true_count": 70,
+      "true_info_count": 63,
+      "true_info_percent": 63.0,
+      "true_percent": 70.0
+    }
+  },
+  "candidate_id": "L4",
+  "corpus_sha256": "8f93be730e771a6c7f0a3603b550ba16d9ccdf06cc43152b77afc1e3818f6cba",
+  "general_capability_used_for_selection": false,
+  "multiplier_values": [
+    0,
+    0.25,
+    0.5,
+    0.75
+  ],
+  "reason": "L4 has the highest held-out target-only accuracy (33/44=75.00%) while TQA100 True is 70/100, one question below the highest 71/100; L3 reaches 29/44=65.91% held-out and 71/100 True, and L1/L2 have lower held-out accuracy.",
+  "selection_metrics": [
+    "heldout target-only classifier accuracy",
+    "TQA100 True percent"
+  ],
+  "source_negative": "dataset/hallucination_shared/qwen3_4b_truthfulqa_false108_short_spans_v4/grad_false_spans_108.jsonl",
+  "source_negative_sha256": "a815f41236b541396676caa8fa9e5455fa409c939059c4692d9cc870521ff0cc",
+  "source_positive": "dataset/hallucination_shared/qwen3_4b_truthfulqa_positive108_short_spans_v3/grad_positive_spans_108.jsonl",
+  "source_positive_sha256": "77dfd624943604a0c0ea6415d0d6ac9071426bdcbee8e65e9aec4e750c0e2eb2"
+}

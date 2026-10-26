@@ -1,0 +1,13 @@
+model_config: llama31.yaml
+domain: hallucination
+data: samples/llama31/hallucination.jsonl
+artifact: cans/artifacts/llama31/hallucination.pt
+objective_sign: 1
+grad-only:
+  top_k: 1000
+  strengths:
+  - 0.1
+  - 0.2
+  - 0.3
+  - 0.4
+  - 0.5

@@ -1,0 +1,33 @@
+{
+  "model": "Qwen/Qwen3-4B",
+  "verified_files": 44,
+  "domains": {
+    "safety": {
+      "h_examples": 512,
+      "train_examples": 410,
+      "heldout_examples": 102,
+      "heldout_source_prompts": 102,
+      "heldout_final_benchmark_prompt_overlap": 0,
+      "domain_selection_data": "samples/baselines/safety/caa_selection.jsonl",
+      "selection_record": "samples/baselines/safety/provenance/selected_h_neurons.json"
+    },
+    "toxicity": {
+      "h_examples": 1000,
+      "train_examples": 800,
+      "heldout_examples": 200,
+      "heldout_source_prompts": 100,
+      "heldout_final_benchmark_prompt_overlap": 0,
+      "domain_selection_data": "samples/baselines/toxicity/caa_selection.jsonl",
+      "selection_record": "samples/baselines/toxicity/provenance/selected_h_neurons.json"
+    },
+    "hallucination": {
+      "h_examples": 216,
+      "train_examples": 172,
+      "heldout_examples": 44,
+      "heldout_source_prompts": 37,
+      "heldout_final_benchmark_prompt_overlap": 0,
+      "domain_selection_data": "samples/baselines/hallucination/caa_selection.jsonl",
+      "selection_record": "samples/baselines/hallucination/provenance/selected_h_neurons.json"
+    }
+  }
+}

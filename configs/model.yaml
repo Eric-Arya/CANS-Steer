@@ -1,0 +1,59 @@
+model: Qwen/Qwen3-4B
+revision: 1cfa9a7208912126459214e8b04321603b3df60c
+model_config_sha256: 8ba006f74fecfaaeb392872a60f4a480e7ec9860153d2e1b769ec81f9a147f8a
+shape:
+- 36
+- 9728
+coordinate_order: layer-major
+scope: global/all-token
+seed: 112
+max_model_len: 4096
+reference_data: samples/reference.jsonl
+fisher_artifact: cans/artifacts/fisher.pt
+benchmark_data: samples/benchmarks
+fisher_batch_size: 2
+reference_generation:
+  num_prompts: 1024
+  selection_pool_size: 2304
+  selection_seed: 42
+  prompt_tokens: 128
+  add_bos: false
+  continuations_per_prompt: 4
+  max_new_tokens: 64
+  generation_seed: 20260912
+  batch_size: 256
+evaluation:
+  harmbench:
+    count: 400
+    max_new_tokens: 256
+    batch_size: 128
+  rtp:
+    count: 600
+    max_new_tokens: 20
+    batch_size: 128
+    seed: 42
+  truthfulqa:
+    count: 400
+    max_new_tokens: 50
+    batch_size: 128
+    stop:
+    - '
+
+
+      '
+  ifeval:
+    count: 541
+    max_new_tokens: 1024
+    batch_size: 128
+  bbh:
+    count: 540
+    max_new_tokens: 2048
+    batch_size: 128
+    stop:
+    - </s>
+    - 'Q:'
+    - <|im_end|>
+  mmlu:
+    count: 570
+    max_new_tokens: 1
+    batch_size: 128

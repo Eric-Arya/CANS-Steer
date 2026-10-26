@@ -1,0 +1,15 @@
+domain: hallucination
+data: samples/hallucination.jsonl
+artifact: cans/artifacts/hallucination.pt
+objective_sign: 1
+cans:
+  epsilon: 0.001
+  cap: null
+grad-only:
+  top_k: 1000
+  strengths:
+  - 0.1
+  - 0.2
+  - 0.3
+  - 0.4
+  - 0.5

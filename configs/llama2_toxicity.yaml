@@ -1,0 +1,13 @@
+model_config: llama2.yaml
+domain: toxicity
+data: samples/llama2/toxicity.jsonl
+artifact: cans/artifacts/llama2/toxicity.pt
+objective_sign: -1
+grad-only:
+  top_k: 8000
+  strengths:
+  - 0.1
+  - 0.2
+  - 0.3
+  - 0.4
+  - 0.5

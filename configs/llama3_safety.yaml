@@ -1,0 +1,13 @@
+model_config: llama3.yaml
+domain: safety
+data: samples/llama3/safety.jsonl
+artifact: cans/artifacts/llama3/safety.pt
+objective_sign: 1
+grad-only:
+  top_k: 8000
+  strengths:
+  - 0.1
+  - 0.2
+  - 0.3
+  - 0.4
+  - 0.5

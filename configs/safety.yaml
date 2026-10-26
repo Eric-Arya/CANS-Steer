@@ -1,0 +1,15 @@
+domain: safety
+data: samples/safety.jsonl
+artifact: cans/artifacts/safety.pt
+objective_sign: 1
+cans:
+  epsilon: 1.6724951675216433
+  cap: 0.75
+grad-only:
+  top_k: 8000
+  strengths:
+  - 0.1
+  - 0.2
+  - 0.3
+  - 0.4
+  - 0.5

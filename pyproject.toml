@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cans-steering"
+version = "0.1.0"
+description = "Capability-Preserving Neuron Steering"
+requires-python = ">=3.10,<3.13"
+dependencies = [
+  "torch==2.7.0", "transformers==4.53.2", "PyYAML==6.0.2",
+  "numpy==1.26.4", "safetensors>=0.4.3", "accelerate==1.9.0",
+]
+
+[project.optional-dependencies]
+eval = ["vllm==0.9.1", "datasketch==2.0.0", "nltk>=3.9", "langdetect==1.0.9",
+        "absl-py>=2", "immutabledict>=4", "word2number==1.1", "regex>=2024.5",
+        "spacy==3.7.5", "pyarrow==20.0.0", "openai==1.97.0",
+        "lm-eval @ git+https://github.com/EleutherAI/lm-evaluation-harness.git@8a07e1110d060de48cfc7a9a7987b7659060b60b",
+        "en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl"]
+baselines = ["peft==0.16.0", "scikit-learn==1.5.1", "scipy>=1.10"]
+test = ["pytest==8.1.1"]
+
+[tool.setuptools.packages.find]
+include = ["cans*", "baselines*"]
+
+[tool.pytest.ini_options]
+testpaths = ["scripts/tests"]

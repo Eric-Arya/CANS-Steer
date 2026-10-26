@@ -1,0 +1,15 @@
+domain: toxicity
+data: samples/toxicity.jsonl
+artifact: cans/artifacts/toxicity.pt
+objective_sign: -1
+cans:
+  epsilon: 6.4
+  cap: 0.75
+grad-only:
+  top_k: 8000
+  strengths:
+  - 0.1
+  - 0.2
+  - 0.3
+  - 0.4
+  - 0.5
