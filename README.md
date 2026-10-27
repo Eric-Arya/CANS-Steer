@@ -1,5 +1,5 @@
 <h1 align="center">CANS</h1>
-<p align="center"><strong>Capability-Preserving Neuron Steering</strong></p>
+<p align="center"><strong>Capability-Preserving Neuron Steering for Large Language Models</strong></p>
 
 [![arXiv](https://img.shields.io/badge/arXiv-2610.35530-b31b1b.svg)](https://arxiv.org/abs/2610.35530)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -11,7 +11,7 @@ This is the **official code and data release** for the paper
 [Installation](#installation) · [Quick start](#quick-start) ·
 [Reproduction](#main-pipeline) · [Citation](#citation)
 
-This repository provides code for CANS, a **lightweight and generalizable**
+This repository provides code for CANS, a lightweight and generalizable
 neuron steering method that balances target-behavior control with capability preservation through
 closed-form scaling for all neurons. Its coefficients fold into MLP weights,
 adding no parameters or inference-time operations.
