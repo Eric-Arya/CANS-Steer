@@ -210,9 +210,20 @@ method settings are recorded in the supplied configurations and artifacts.
 
 ## Citation
 
-If you use CANS or the released code and data in your research, please cite
-[the paper](https://arxiv.org/abs/2610.35530) using the metadata in
-[`CITATION.cff`](CITATION.cff).
+If you use CANS or the released code and data in your research, please cite:
+
+```bibtex
+@article{wu2026cans,
+  title   = {{CANS}: Capability-Preserving Neuron Steering for Large Language Models},
+  author  = {Wu, Yucheng and Xie, Chengyi and Wang, Chenpeng and Pan, Liangming},
+  journal = {arXiv preprint arXiv:2610.35530},
+  year    = {2026},
+  doi     = {10.48550/arXiv.2610.35530},
+  url     = {https://arxiv.org/abs/2610.35530}
+}
+```
+
+Machine-readable citation metadata is available in [`CITATION.cff`](CITATION.cff).
 
 ## Questions and contributions
 
