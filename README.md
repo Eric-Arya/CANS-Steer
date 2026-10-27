@@ -1,17 +1,41 @@
 <h1 align="center">CANS</h1>
-<p align="center"><strong>Capability-Preserving Neuron Steering</strong></p>
+<p align="center"><strong>Capability-Preserving Neuron Steering for Large Language Models</strong></p>
 
-This repository provides code for CANS, a **lightweight and generalizable**
-neuron steering method that balances target-behavior control with capability preservation through
-closed-form scaling for all neurons. Its coefficients fold into MLP weights,
-adding no parameters or inference-time operations.
+[![arXiv](https://img.shields.io/badge/arXiv-2610.35530-b31b1b.svg)](https://arxiv.org/abs/2610.35530)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-We release **all CANS and baselines implementation code** that support multiple domains and models
-and **all annotated corpora used for Qwen3-4B needed to reproduce the CANS and baseline results**
-across safety, toxicity, and hallucination,
-including WikiText as the general reference input. **We welcome reproduction and discussion.**
+This is the **official code and data release** for the paper
+**[CANS: Capability-Preserving Neuron Steering for Large Language Models](https://arxiv.org/abs/2610.35530)**.
+
+**Yucheng Wu, Chengyi Xie, Chenpeng Wang, Liangming Pan** · arXiv preprint, October 2026
+
+[Paper](https://arxiv.org/abs/2610.35530) · [PDF](https://arxiv.org/pdf/2610.35530) ·
+[Installation](#installation) · [Quick start](#quick-start) ·
+[Reproduction](#main-pipeline) · [Citation](#citation)
+
+CANS is a training-free neuron steering method that balances target-behavior
+control with capability preservation through closed-form neuron scaling.
+Its coefficients fold into MLP weights, adding no parameters or inference-time
+operations. A shared procedure supports safety, toxicity, and hallucination control.
 
 ![Figure 1: Overview of CANS](fig1.png)
+
+## Release contents
+
+- **CANS implementation** for extracting target gradients and Fisher statistics,
+  solving neuron scales, and generating and evaluating steered responses.
+- **Baseline implementations** of LoRA SFT, SN-Tune, DAP, AurA, CAA, H-Neurons,
+  and the CANS-Grad-Only ablation, with model/domain configurations.
+- **Qwen3-4B reproduction data** for all three domains, including annotated CANS
+  and baseline corpora, frozen WikiText reference continuations, benchmark
+  inputs, and provenance manifests.
+- **Qwen3-4B artifacts** containing shared Fisher statistics, domain gradients,
+  and ready-to-use example steering coefficients.
+
+The code supports Qwen and Llama models. **Bundled corpora and artifacts target
+Qwen3-4B**; Llama configurations require separate model-specific inputs.
+See the [data inventory](samples/README.md) and
+[artifact inventory](cans/artifacts/README.md) for the exact release contents.
 
 ## Method overview
 
@@ -43,9 +67,11 @@ Dependencies are declared in `pyproject.toml` and pinned in `uv.lock`.
 ## Installation
 
 Use Linux, Python 3.10 or 3.11, Git, and an NVIDIA GPU with BF16 support.
-With [uv](https://docs.astral.sh/uv/) installed, run from the repository root:
+With [uv](https://docs.astral.sh/uv/) installed:
 
 ```bash
+git clone https://github.com/Eric-Arya/CANS-Steer.git
+cd CANS-Steer
 uv sync --extra eval --extra baselines --extra test --frozen
 source .venv/bin/activate
 python scripts/prepare_release.py --verify-only
@@ -175,9 +201,33 @@ Grad and Fisher extraction use FP32 with global/all-token alpha coverage.
 Model evaluation uses BF16. Model revisions, generation settings, and actual
 method settings are recorded in the supplied configurations and artifacts.
 
+## Citation
+
+If you use CANS or the released code and data in your research, please cite:
+
+```bibtex
+@article{wu2026cans,
+  title   = {{CANS}: Capability-Preserving Neuron Steering for Large Language Models},
+  author  = {Wu, Yucheng and Xie, Chengyi and Wang, Chenpeng and Pan, Liangming},
+  journal = {arXiv preprint arXiv:2610.35530},
+  year    = {2026},
+  doi     = {10.48550/arXiv.2610.35530},
+  url     = {https://arxiv.org/abs/2610.35530}
+}
+```
+
+Machine-readable citation metadata is available in [`CITATION.cff`](CITATION.cff).
+
+## Questions and contributions
+
+We welcome reproduction reports, questions, and contributions through
+[GitHub Issues](https://github.com/Eric-Arya/CANS-Steer/issues) and pull requests.
+For reproduction issues, include the model revision, configuration, command,
+environment details, and relevant logs or evaluation outputs.
+
 ## Attribution
 
-CANS code uses the MIT License. Datasets, model weights, and third-party
+CANS code uses the [MIT License](LICENSE). Datasets, model weights, and third-party
 evaluators retain their original licenses. The bundled IFEval scorer preserves
 its Apache-2.0 license. Sources:
 [Circuit Breakers](https://github.com/GraySwanAI/circuit-breakers),

@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use CANS or its released code and data, please cite the paper below."
+type: software
+title: "CANS: Capability-Preserving Neuron Steering for Large Language Models"
+authors:
+  - family-names: Wu
+    given-names: Yucheng
+  - family-names: Xie
+    given-names: Chengyi
+  - family-names: Wang
+    given-names: Chenpeng
+  - family-names: Pan
+    given-names: Liangming
+repository-code: "https://github.com/Eric-Arya/CANS-Steer"
+url: "https://github.com/Eric-Arya/CANS-Steer"
+license: MIT
+preferred-citation:
+  type: article
+  title: "CANS: Capability-Preserving Neuron Steering for Large Language Models"
+  authors:
+    - family-names: Wu
+      given-names: Yucheng
+    - family-names: Xie
+      given-names: Chengyi
+    - family-names: Wang
+      given-names: Chenpeng
+    - family-names: Pan
+      given-names: Liangming
+  journal: arXiv
+  year: 2026
+  doi: "10.48550/arXiv.2610.35530"
+  url: "https://arxiv.org/abs/2610.35530"
