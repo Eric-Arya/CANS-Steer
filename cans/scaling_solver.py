@@ -41,7 +41,31 @@ def cans_scales(gradient, fisher, epsilon, damping=None, cap=None):
     }
 
 
-def grad_only_scales(target_gradient, top_k, multiplier):
+def grad_only_scales(target_gradient, coefficient, cap, *, objective_sign=1):
+    """Identity-curvature CANS: retain every signed FP32 mean-gradient coordinate.
+
+    Use the comparison CANS cap unchanged and calibrate only ``coefficient``.
+    ``objective_sign`` is +1 for safety/hallucination and -1 for toxicity.
+    No ranking, Fisher division, damping, or normalization is applied.
+    """
+    if (target_gradient.ndim != 2 or not target_gradient.numel()
+            or target_gradient.dtype != torch.float32
+            or not target_gradient.isfinite().all()):
+        raise ValueError("Expected finite, nonempty FP32 [layers, intermediate_size] gradients")
+    if not math.isfinite(coefficient) or coefficient < 0:
+        raise ValueError("coefficient must be finite and nonnegative")
+    if cap is not None and (not math.isfinite(cap) or cap <= 0):
+        raise ValueError("cap must be finite and positive, or None for uncapped CANS")
+    if objective_sign not in (-1, 1):
+        raise ValueError("objective_sign must be +1 or -1")
+    raw_delta = coefficient * target_gradient.double()
+    if not raw_delta.isfinite().all():
+        raise ValueError("coefficient times gradient is non-finite")
+    delta = raw_delta if cap is None else raw_delta.clamp(-cap, cap)
+    return 1 + objective_sign * delta
+
+
+def legacy_grad_only_scales(target_gradient, top_k, multiplier):
     """Rank positive mean target gradients, then scale the selected coordinates.
 
     Use a multiplier above one to promote the target, below one to suppress it.

@@ -229,9 +229,12 @@ For domain selection only, pass
 path as `--benchmark-file` to scoring. The selection inputs retain benchmark
 metadata and formatting, including category-specific HarmBench judge fields.
 
-CANS-Grad-Only uses the existing `cans_compute_neuron_scales.py --method grad-only`
-entry point, followed by `generate_responses.py`. Its K is 8,000 for safety
-and toxicity and 1,000 for hallucination; strengths are 0.1 through 0.5.
+CANS-Grad-Only uses `cans_compute_neuron_scales.py --method grad-only --coefficient C`,
+then `generate_responses.py`. It applies `1 + objective_sign * clip(C*g, -cap, cap)`
+to all signed FP32 mean-gradient coordinates, with the same cap as CANS (or no
+clipping when CANS is uncapped). No Top-K, Fisher division, damping, or normalization
+is used. Calibrate C per model/domain. Old K/strength settings remain historical
+and are used only by `--method legacy-grad-only --strength S`.
 
 ## Source attribution
 

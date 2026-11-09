@@ -12,7 +12,7 @@ import yaml
 from cans.data_processing import config as load_config, padded_batch, read_jsonl, sha256
 from cans.gradient_fisher_extraction import extract_statistics, response_gradients
 from cans.model_interventions import fold_scales, neuron_alphas
-from cans.scaling_solver import cans_scales, grad_only_scales
+from cans.scaling_solver import cans_scales, grad_only_scales, legacy_grad_only_scales
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -127,10 +127,31 @@ def test_closed_form_optimality_and_clipping():
 
 def test_grad_only_ranking():
     g = torch.tensor([[0.1, -3.0, 0.4, 0.4]])
-    result = grad_only_scales(g, 1, 0.5)
+    result = legacy_grad_only_scales(g, 1, 0.5)
     assert result.tolist() == [[1, 1, 0.5, 1]]
     with pytest.raises(ValueError):
-        grad_only_scales(g, 4, 0)
+        legacy_grad_only_scales(g, 4, 0)
+
+
+@pytest.mark.parametrize("sign", [-1, 1])
+def test_signed_identity_grad_only(sign):
+    g = torch.tensor([[-2., -.1, 0., .1, 2.]], dtype=torch.float32)
+    actual = grad_only_scales(g, 2., .75, objective_sign=sign)
+    expected_delta = torch.tensor([[-.75, -.2, 0., .2, .75]], dtype=torch.float64)
+    torch.testing.assert_close(actual, 1 + sign * expected_delta)
+    torch.testing.assert_close(grad_only_scales(g, 0., .75), torch.ones_like(actual))
+    torch.testing.assert_close(grad_only_scales(g, 2., None), 1 + 2 * g.double())
+
+
+@pytest.mark.parametrize("coefficient,cap", [(-1., .75), (float("nan"), .75), (1., 0.), (1., float("inf"))])
+def test_identity_grad_only_rejects_invalid_parameters(coefficient, cap):
+    with pytest.raises(ValueError):
+        grad_only_scales(torch.ones(2, 3), coefficient, cap)
+
+
+def test_identity_grad_only_rejects_non_fp32_statistics():
+    with pytest.raises(ValueError, match="FP32"):
+        grad_only_scales(torch.ones(2, 3, dtype=torch.float16), 1., .75)
 
 
 def test_release_hashes_and_spans():

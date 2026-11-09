@@ -141,11 +141,12 @@ Replace `safety` with `toxicity` or `hallucination` as needed. Extraction uses
 FP32 and supports `--resume`. Omit `--gradient` and `--fisher` to reuse the
 included statistics. Pass the resulting coefficients to `scripts/generate_responses.py`.
 
-For **Grad-only**, use:
+For **CANS-Grad-Only**, first calibrate `COEFFICIENT` for the model/domain,
+then use the same cap as the CANS comparison (from the domain config):
 
 ```bash
 python scripts/cans_compute_neuron_scales.py \
-  --config configs/safety.yaml --method grad-only --strength 0.5 \
+  --config configs/safety.yaml --method grad-only --coefficient "$COEFFICIENT" \
   --output outputs/safety_grad_only.pt
 ```
 
