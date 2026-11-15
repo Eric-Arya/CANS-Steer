@@ -232,8 +232,10 @@ in the paper's toxicity approximation figure. The current default computes
 median damping from the supplied Fisher, so these are new median-damping
 measurements rather than copied historical figure values.
 
-Use `--config configs/llama2_toxicity.yaml` with matching model-specific
-`--gradient`, `--fisher`, and `--reference` inputs for Llama-2. The full reference
+Bundled data, statistics, and coefficients target Qwen3 only. The Llama-2
+epsilon preset is a configuration example, not a ready-to-run numerical
+reproduction package. To use `--config configs/llama2_toxicity.yaml`, supply
+your own model-matched `--gradient`, `--fisher`, and `--reference` inputs. The full reference
 contains the configured 1,024 prompts and four frozen continuations per prompt.
 Score extraction uses FP32; actual KL uses BF16 model weights and FP64
 probabilities and reduction. Response-token KL is summed per continuation,
