@@ -98,8 +98,10 @@ def test_prepare_release_checks_both_manifests_and_grouped_splits(tmp_path):
     load_script('prepare_release').main(['--verify-only', '--output', str(report)])
     data = json.loads(report.read_text())
     manifest = json.loads((Path(__file__).resolve().parents[2] / 'samples/manifest.json').read_text())
-    assert data['cans_files'] == len(manifest['files']) and data['baseline_files'] == 44
-    assert data['verified_files'] == len(manifest['files']) + 44
+    baseline_manifest = json.loads((Path(__file__).resolve().parents[2] / 'samples/baselines/manifest.json').read_text())
+    assert data['cans_files'] == len(manifest['files'])
+    assert data['baseline_files'] == len(baseline_manifest['files'])
+    assert data['verified_files'] == len(manifest['files']) + len(baseline_manifest['files'])
     assert set(data['domains']) == {'safety', 'toxicity', 'hallucination'}
     assert data['domains']['toxicity']['heldout_examples'] == 200
 

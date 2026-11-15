@@ -9,17 +9,17 @@
     },
     {
       "path": "cans/artifacts/hallucination.pt",
-      "sha256": "6d703b21eea31f196d6f7e30364d0ac82fef8ac68f4e444cf9809a85cc9cea79",
+      "sha256": "986daad7041f9767e1b7e017ddcee93ffca76cb72fbb1cd83fc530abc43ea28f",
       "bytes": 4205461
     },
     {
       "path": "cans/artifacts/safety.pt",
-      "sha256": "704792f603f04009109c47a465b3052c2d56fd414c2abfe1441a8cdaedfe8939",
+      "sha256": "e12e94802162ace55311424e4e535a79ee2793d03363bf225135b67f652c70ea",
       "bytes": 4205277
     },
     {
       "path": "cans/artifacts/toxicity.pt",
-      "sha256": "a053d46850af76e712d334c782db667fc1d3daa72aa552284fd5a180bb117f0a",
+      "sha256": "6010084de8cbc1d1d6c57c877c357111b3e23eb32932fe061e2a8a87814b6227",
       "bytes": 4205421
     },
     {
@@ -89,8 +89,8 @@
     },
     {
       "path": "samples/hallucination.jsonl",
-      "sha256": "fe52db0f8470199a8eb6a302df49ca54d6c01dfd53918bd44cf465480201d0ef",
-      "bytes": 119074
+      "sha256": "2ddc08154e846fbc26472bb174b071d36813c3632abb2a4b625232dc98ba2b97",
+      "bytes": 117994
     },
     {
       "path": "samples/ifeval_scorer.zip",
@@ -104,73 +104,73 @@
     },
     {
       "path": "samples/safety.jsonl",
-      "sha256": "9e50e183a05ae38d133a103d248d4b3445a912ffef4cebac857c02d1891595ea",
-      "bytes": 401084
+      "sha256": "7514b2386fe2f27c3ec82db1af10f386f840cf2f640cd971c9e7ee2e4fd912df",
+      "bytes": 403388
     },
     {
       "path": "samples/toxicity.jsonl",
-      "sha256": "27b23314de72d7361a4ab5dc49d75f29a71ea6806e719f3e0761c293af2d88e9",
-      "bytes": 186306
+      "sha256": "2f199fb9df1c0ccc4514a1612cf20b6e1e4bdb761095a96d3a2006386d1da91c",
+      "bytes": 187806
     }
   ],
   "provenance": {
     "samples/safety.jsonl": {
-      "source": "projects/iclr_neuron/safety_neuron/training/circuit_breakers_train_qwen3_4b_raw_bf16_greedy256_refusal_substring_safe256/safe_responses.jsonl",
+      "source_id": "source-4ad70fad3b1eb42b",
       "sha256": "470d9ae69d931c4a9d43c253141fd53382f689f1f0b97f464daf0210f5e1899d"
     },
     "samples/toxicity.jsonl": {
-      "source": "rtp_grad_qwen3_4b_raw_shared_n25_toxiccue_broad_v2/selected_clear_cues.jsonl",
+      "source_id": "source-4046fb69825e7c24",
       "sha256": "28e7a745353b6c661819ddd005248d5434c3eae22becd36b819bfd14d557b912"
     },
     "samples/hallucination.jsonl": {
-      "source": "hallucination_shared/qwen3_4b_truthfulqa_positive108_short_spans_v3/grad_positive_spans_108.jsonl",
+      "source_id": "source-f3036de7c562c4be",
       "sha256": "77dfd624943604a0c0ea6415d0d6ac9071426bdcbee8e65e9aec4e750c0e2eb2"
     },
     "samples/reference.jsonl": {
-      "source": "wikitext/wikitext-2-raw-v1/qwen3_4b_raw_seed42_n1024_c4_response64_v1/continuations.jsonl",
+      "source_id": "source-2184e4e4841407d2",
       "sha256": "f546bb13b2c9e7b6a4b461181072c7eafc74ad54488423593f9b994098d0ecb1"
     },
     "cans/artifacts/fisher.pt": {
-      "source": "results/qwen3_4b/model_only/wikitext_raw_seed42_n1024_c4_response64_whole_response_v1/merged/fisher.pt",
+      "source_id": "source-637cf53fe6770810",
       "sha256": "e011c33d90be0f691d4acbe5c8013517d09967034a6235d33affd440fe98e5d5"
     },
     "cans/artifacts/safety.pt": {
-      "source": "results/qwen3_4b/safety/grad_uniform/merged/gradients/all_neurons_mean_gradient.csv",
+      "source_id": "source-007cf8edd8134bfd",
       "sha256": "ae7bc76543840a059c517ee51b2b46e734bd36433a3e1350e3beb326bf580624",
       "coefficient_protocol": "published strongest-domain epsilon; full-coordinate median of current WikiText Fisher; cap=null"
     },
     "cans/artifacts/toxicity.pt": {
-      "source": "results/qwen3_4b/toxicity/raw_grad_shared_n25_toxiccue_broad_v2/merged/gradients/all_neurons_mean_gradient.csv",
+      "source_id": "source-44988bca76d98f86",
       "sha256": "f95f991f0376b0e894edf21190ca27e11a383c3abf5b24004097295d4307e904",
       "coefficient_protocol": "published strongest-domain epsilon; full-coordinate median of current WikiText Fisher; cap=null"
     },
     "cans/artifacts/hallucination.pt": {
-      "source": "results/qwen3_4b/hallucination/short_spans_v3_f5_bbh_tqa_v1/grad/merged/gradients/g_summary.pt",
+      "source_id": "source-c7c68d665a2b2346",
       "sha256": "5efabaae7076728b8be148dad038d7e1656a4487a3b3aafca0033c8fd3386612",
       "coefficient_protocol": "published strongest-domain epsilon; full-coordinate median of current WikiText Fisher; cap=null"
     },
     "samples/benchmarks/harmbench.jsonl": {
-      "source": "results/qwen3_4b/safety/wikitext_whole_response_fisher_same_f1_f5_full_v1/eval/full/WF5/harmbench/responses.jsonl",
+      "source_id": "source-0543ac8fe1ac57b0",
       "sha256": "7951b4172b043a6e97bfeedbbd56e3c86f2530a256254a0260c28d8bf95a196d"
     },
     "samples/benchmarks/rtp.jsonl": {
-      "source": "results/qwen3_4b/toxicity/wikitext_whole_response_fisher_same_f1_f5_full_v1/eval/full/WF5/rtp/responses.jsonl",
+      "source_id": "source-e971cda46391137d",
       "sha256": "d324e73e3f715486a1e68581c6a3990264b543e6b20fd49e24be109653e1f777"
     },
     "samples/benchmarks/truthfulqa.jsonl": {
-      "source": "results/qwen3_4b/hallucination/wikitext_whole_response_fisher_same_f1_f5_full_v1/eval/full/W1/truthfulqa_freeform/responses.jsonl",
+      "source_id": "source-3941dd0450daa6b3",
       "sha256": "f788177d8b6bdd331a8e238a8a3bb047ac44dfa36f05b8a471c64f5aadeee08f"
     },
     "samples/benchmarks/ifeval.jsonl": {
-      "source": "results/qwen3_4b/safety/wikitext_whole_response_fisher_same_f1_f5_full_v1/eval/full/WF5/ifeval/responses.jsonl",
+      "source_id": "source-66bf6070c4fed4e6",
       "sha256": "75220a49eab87a530c2555504c9568af6156cac7870f0b04622a5ca489d84071"
     },
     "samples/benchmarks/bbh.jsonl": {
-      "source": "results/qwen3_4b/safety/wikitext_whole_response_fisher_same_f1_f5_full_v1/eval/full/WF5/bbh/responses.jsonl",
+      "source_id": "source-0fb2300eb17a0cc3",
       "sha256": "8c0808f48722426fba71532177f58d7b3ebf731505fb35affe4d6dcf3c5a67af"
     },
     "samples/benchmarks/mmlu.jsonl": {
-      "source": "results/qwen3_4b/safety/wikitext_whole_response_fisher_same_f1_f5_full_v1/eval/full/WF5/mmlu/responses.jsonl",
+      "source_id": "source-2fa8421167f3827f",
       "sha256": "e85d91e571293f4dfd57381c83ab878217dd7c85254d92e22f4402f78e4032b2"
     }
   },

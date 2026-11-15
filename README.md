@@ -152,11 +152,10 @@ python scripts/cans_compute_neuron_scales.py \
 ```
 
 Replace `safety` with `toxicity` or `hallucination` as needed. Extraction uses
-FP32 and supports `--resume`. New target-gradient extraction adds BOS only when
+FP32 and supports `--resume`. Target-gradient extraction adds BOS only when
 it is absent from the formatted prompt; native Llama-3/3.1 chat templates
-already contain it. Changed tokenization cannot resume a historical extraction
-checkpoint. Frozen statistics retain their original provenance. Omit `--gradient` and `--fisher` to reuse the
-included statistics. Pass the resulting coefficients to `scripts/generate_responses.py`.
+already contain it. Resume requires matching data, settings and tokenization.
+Omit `--gradient` and `--fisher` to reuse the included statistics. Pass the resulting coefficients to `scripts/generate_responses.py`.
 
 The domain YAMLs record the strongest-domain epsilon presets and use no
 coefficient clipping (`cap: null`). Damping is computed from the median over
@@ -228,9 +227,7 @@ update and its budget, and is excluded from the KL prediction.
 
 The two-model epsilon presets live in `configs/evaluation.yaml` under
 `approximation.epsilon_presets`. They match the ten epsilon values per model
-in the paper's toxicity approximation figure. The current default computes
-median damping from the supplied Fisher, so these are new median-damping
-measurements rather than copied historical figure values.
+in the paper's toxicity approximation figure. Damping is computed as the median over all coordinates of the supplied Fisher.
 
 Bundled data, statistics, and coefficients target Qwen3 only. The Llama-2
 epsilon preset is a configuration example, not a ready-to-run numerical
@@ -251,7 +248,7 @@ We also release our implementations of **LoRA SFT, SN-Tune, DAP (with its
 IA3-DPO guide), AurA, CAA, H-Neurons, and CANS-Grad-Only**, together with
 **Qwen3-4B baseline corpora** for all three domains. This includes contrastive
 pairs, exact answer spans, frozen classifier splits and identification prompts,
-the toxicity candidate pool, and the Jigsaw AurA corpus.
+the selected toxicity examples and the Jigsaw AurA corpus.
 
 ```bash
 uv sync --extra eval --extra baselines --extra test --frozen
@@ -294,7 +291,7 @@ in the model config and pass that directory as `--benchmark-data` when scoring.
 The release contains Qwen3-4B corpora for all three domains and frozen WikiText
 continuations as the general reference input, with response token IDs. Baseline
 inputs include paired responses, reviewed exact spans, identification prompts, frozen classifier
-splits, selection manifests, the toxicity candidate pool, and Jigsaw AurA data.
+splits, selection manifests, selected toxicity response pairs, and Jigsaw AurA data.
 See the [sample inventory](samples/README.md) for counts and file schemas.
 
 `samples/manifest.json` and `samples/baselines/manifest.json` record file hashes

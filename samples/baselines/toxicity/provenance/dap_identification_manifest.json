@@ -6,17 +6,17 @@
       "consumed_source_row_frontier": 9265,
       "dpo_pair_count": 500,
       "dpo_preferences": {
-        "path": "dataset/rtp_onpolicy_shared/llama2_7b_raw_n25_v3/dpo_preferences.jsonl",
+        "path_id": "source-09227321855e1537",
         "sha256": "07975fdc1d4f91eaf4ee1077ef6169a3c734336107ff736137e7ce2881abb883"
       },
       "dpo_source_row_frontier": 9248,
       "master_pool": {
-        "path": "dataset/rtp_onpolicy_shared/llama2_7b_raw_n25_v3/master_pool.jsonl",
+        "path_id": "source-7e570fbdfe7e1866",
         "sha256": "bc4d93ceb2f78c16eed4773925b3851cfe30056e9ca7df98d26ed384647b2dfc"
       },
       "master_prompt_count": 9248,
       "metadata": {
-        "path": "dataset/rtp_onpolicy_shared/llama2_7b_raw_n25_v3/metadata.json",
+        "path_id": "source-02e5ad8263764869",
         "sha256": "23f132fa4b5740ba949457668009c12439acfab87b0aeaf880a5707b64ce884f"
       },
       "model_name": "llama2",
@@ -26,17 +26,17 @@
       "consumed_source_row_frontier": 51140,
       "dpo_pair_count": 500,
       "dpo_preferences": {
-        "path": "dataset/rtp_onpolicy_shared/qwen3_4b_raw_n25_prompt_toxic_first_pairs500_v1/dpo_preferences.jsonl",
+        "path_id": "source-732ac61287c623c4",
         "sha256": "7c0c887cda0be635bfe0b35c3914252732b9143fbbdbd200e16f1b31f88231d7"
       },
       "dpo_source_row_frontier": 51121,
       "master_pool": {
-        "path": "dataset/rtp_onpolicy_shared/qwen3_4b_raw_n25_prompt_toxic_first_pairs500_v1/master_pool.jsonl",
+        "path_id": "source-9da9d90129dd056d",
         "sha256": "173f2ad0bd1bc46d326a1c688c4697f4477153a738201d8ca6fb2e6007986dfd"
       },
       "master_prompt_count": 2096,
       "metadata": {
-        "path": "dataset/rtp_onpolicy_shared/qwen3_4b_raw_n25_prompt_toxic_first_pairs500_v1/metadata.json",
+        "path_id": "source-34549890995f7870",
         "sha256": "7df9b8179101d3b4bbae99d7f1b25bb2ae7e1678daa78df35c975b42c97e3ce8"
       },
       "model_name": "qwen3_4b",
@@ -45,14 +45,13 @@
   },
   "frontier_policy": "maximum source-row index consumed by either current master pool",
   "frontier_unit": "zero-based original RTP source row",
-  "output": "dataset/projects/neurips_neuron/identification/toxicity_rtp_shared_raw_post_dpo_high_toxic_n200_v1.jsonl",
+  "output_id": "source-1a362ab9ab06e9e0",
   "output_sha256": "aaaf251edfe80c890a51c71a349519fb990965753115cb42e8ea8a1d0157baec",
   "per_model_frontiers": {
     "llama2": 9265,
     "qwen3_4b": 51140
   },
   "prompt_toxicity_threshold": 0.5,
-  "run_fingerprint": "fc2c89ae36bd0d16e4dd9833daf6591dd3d4cee0a9f5cb47375d6c455056f0fd",
   "schema": "toxicity_shared_high_toxic_post_dpo_manifest_v1",
   "selected": [
     {
@@ -1259,7 +1258,7 @@
   "selection_count": 200,
   "selection_rule": "next-200-valid-unique-RTP-prompts-with-stored-prompt-toxicity-ge-0.5-after-max-cross-model-consumed-source-row-frontier-in-source-order",
   "shared_across_models": true,
-  "source": "dataset/aura_eval/sources/realtoxicityprompts/prompts.jsonl",
+  "source_id": "source-4d3cdc0778dd24c0",
   "source_sha256": "4b6808878edc985fcc6bcb6a2a7239a0fb05420cb495f1f6ca1450da5e35c163",
   "test_overlap_excluded": false
 }

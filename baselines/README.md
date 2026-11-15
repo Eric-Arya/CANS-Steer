@@ -58,8 +58,7 @@ modified Transformers installation, or private filesystem paths are required.
 | CAA / H-Neurons domain selection prompts | 200 | 100 | 100 |
 
 Toxicity also includes the Jigsaw AurA corpus (2,000 clean + 500 toxic),
-and the raw on-policy master pool with all candidate completions and classifier
-scores. `samples/baselines/manifest.json` records source identities and hashes.
+with the selected classifier-labeled response pairs. `samples/baselines/manifest.json` records source identities and hashes.
 Exact H-Neurons spans, complete response token IDs, feature regions, frozen
 classifier splits, and saved selection records are included.
 

@@ -112,7 +112,7 @@
       806
     ],
     "dpo_preferences": {
-      "path": "dataset/hallucination_shared/qwen3_4b_truthfulqa_local_judge_mixed108_v1/dpo_preferences_108.jsonl",
+      "path_id": "source-cbaa4a00f38753d6",
       "sha256": "0e740f550be8531654f91f5da96545d36cb3ee1b8d96df2334c5c515d4af507d"
     }
   },

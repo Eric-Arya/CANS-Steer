@@ -42,10 +42,10 @@ contain `prompt` and `response`; class-based methods also retain labels.
 H-Neurons rows include exact spans, complete input token IDs, target token
 ranges, and other feature regions. `h_split.json` records training and held-out
 row IDs; `heldout_prompts.jsonl` contains the corresponding unique held-out
-prompts. `provenance/` preserves source and review records and frozen selections.
+prompts. `provenance/` records the selected settings and data-construction protocols.
 
 Toxicity additionally includes `aura_jigsaw.jsonl` with 2,000 clean and 500 toxic
-comments, and `provenance/master_pool.jsonl` with the on-policy candidate pool.
+comments.
 See [baseline reproduction](../baselines/README.md) for the method-specific input
 formats and supervision settings.
 
@@ -71,8 +71,8 @@ license; the setup script extracts it into `external/`.
 `manifest.json` records checksums for CANS corpora, benchmark inputs, the
 bundled scorer, and released tensors, along with source identities and evaluator
 revisions. `baselines/manifest.json` records baseline input checksums and sources.
-Historical source paths identify provenance; execution reads the released paths
-specified in the configurations.
+Source identifiers and hashes record provenance. Execution reads the released
+paths specified in the configurations.
 
 Verify from the repository root:
 

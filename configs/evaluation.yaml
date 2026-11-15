@@ -1,6 +1,4 @@
 schema: cans_release_evaluation_v1
-execution:
-  max_concurrent_physical_gpus: 4
 runtime:
   max_model_len: 4096
   seed: 112

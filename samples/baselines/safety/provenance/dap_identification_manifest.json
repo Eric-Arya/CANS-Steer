@@ -1,6 +1,6 @@
 {
   "complete_test_overlap_policy": "not-an-exclusion-criterion",
-  "complete_test_reference": "dataset/projects/neurips_neuron/harmbench/processed/prompts_all_400.jsonl",
+  "complete_test_reference_id": "source-e20e160229776800",
   "domain": "safety",
   "domain_frontier": 255,
   "duplicate_normalized_source_prompts_encountered_through_selection": 0,
@@ -9,14 +9,14 @@
       "dpo_source_frontier": 255,
       "frontier_basis": "recorded maximum scanned-or-consumed source row",
       "metadata": {
-        "path": "dataset/projects/iclr_neuron/safety_neuron/training/dpo/circuit_breakers_train_first256_llama3_native_chat_char_matched_dpo_v3.metadata.json",
+        "path_id": "source-ef2669a6343839ba",
         "schema": "sncorpus_native_chat_dpo_v2",
         "sha256": "3f7428175b4c37a313931e0b6a0f244a76500ada5466a167441d94396dbf0391"
       },
       "training_corpus": {
         "maximum_consumed_source_row": 255,
         "minimum_source_row": 0,
-        "path": "dataset/projects/iclr_neuron/safety_neuron/training/dpo/circuit_breakers_train_first256_llama3_native_chat_char_matched_dpo_v3.jsonl",
+        "path_id": "source-f633bc66494dd0ae",
         "records": 256,
         "resolved_unique_source_rows": 256,
         "sha256": "99773f0c42bf6f1d70594813d182c62514d574e1b61ed94e6381e1865475ef59"
@@ -26,22 +26,22 @@
       "dpo_source_frontier": 255,
       "frontier_basis": "recorded maximum scanned-or-consumed source row",
       "metadata": {
-        "path": "dataset/projects/iclr_neuron/safety_neuron/training/dpo/circuit_breakers_train_first256_qwen3_4b_native_chat_char_matched_dpo_v3.metadata.json",
+        "path_id": "source-20e6e5d704f04067",
         "schema": "sncorpus_native_chat_dpo_v2",
         "sha256": "b365e5f4e25bed14337ec85844bdf0693fa2c9e86c050b3da454fe2934d57424"
       },
       "training_corpus": {
         "maximum_consumed_source_row": 255,
         "minimum_source_row": 0,
-        "path": "dataset/projects/iclr_neuron/safety_neuron/training/dpo/circuit_breakers_train_first256_qwen3_4b_native_chat_char_matched_dpo_v3.jsonl",
+        "path_id": "source-e048d99640e22ca1",
         "records": 256,
         "resolved_unique_source_rows": 256,
         "sha256": "785e304402a1763bed371dc55f735074929221665f4faaf37257994c8556b692"
       }
     }
   },
-  "manifest": "dataset/projects/neurips_neuron/identification/safety_sncorpus_post_dpo_n200_v3.manifest.json",
-  "output": "dataset/projects/neurips_neuron/identification/safety_sncorpus_post_dpo_n200_v3.jsonl",
+  "manifest_id": "source-d2d5cc90f8c0fd40",
+  "output_id": "source-035e8781dd4d25c0",
   "output_sha256": "2115c82741b291bc4cc4c0a5f6abc494f498314edd9c0e747802f5e08e7e10dc",
   "per_model_frontiers": {
     "llama3": 255,
@@ -1254,7 +1254,7 @@
   "selection_count": 200,
   "selection_rule": "next-200-valid-unique-SNCorpus-prompts-after-maximum-model-DPO-frontier",
   "shared_across_models": true,
-  "source": "dataset/projects/iclr_neuron/safety_neuron/training/circuit_breakers_train.json",
+  "source_id": "source-a70d2b970ae5a73e",
   "source_namespace": "sncorpus",
   "source_records": 4994,
   "source_sha256": "a56c1d5d7ccbd3ddc9238779957af9ba9bf497816acea3f060b33f8ce83652d5",

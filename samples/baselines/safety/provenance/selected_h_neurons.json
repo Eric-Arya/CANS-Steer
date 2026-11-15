@@ -11,23 +11,23 @@
     "intermediate_size": 9728,
     "total_neurons": 350208,
     "corpus": {
-      "path": "dataset/H-Neurons/qwen3_4b_safety_h_neurons_grad_safe256_minimax_unsafe256_minimalspan_v2/corpus.jsonl",
+      "path_id": "source-9a7118ddcc4b63cd",
       "sha256": "d84899b63b8cead07eb2f200102ba98dc418f9058e6490d93fd018f62ca61bff"
     },
     "feature_manifest": {
-      "path": "dataset/H-Neurons/qwen3_4b_safety_h_neurons_grad_safe256_minimax_unsafe256_minimalspan_v2/feature_manifest.jsonl",
+      "path_id": "source-0285ca41e84b5161",
       "sha256": "7c528048f08c49cf445709798bc42eb5c97d8d5fbe1ecfbfe34d837be53083a4"
     },
     "activation_provenance": {
-      "path": "dataset/H-Neurons/qwen3_4b_safety_h_neurons_grad_safe256_minimax_unsafe256_minimalspan_v2/activations/provenance.json",
+      "path_id": "source-364641aec6c33186",
       "sha256": "5644e6b3283d3a0a0677239966d3f96fab8055e0db668b200369d51a4ec4c02c"
     },
     "classifier_split": {
-      "path": "dataset/H-Neurons/qwen3_4b_safety_h_neurons_grad_safe256_minimax_unsafe256_minimalspan_v2/classifier_split_seed42_heldout20pct/manifest.json",
+      "path_id": "source-f1aaabfcee3a96b7",
       "sha256": "075ad60491324954abe376a9300791dfb48ab4e0038172b79c3a8c9d0e93eb79"
     },
     "subset_tradeoff": {
-      "path": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/subset_tradeoff.json",
+      "path_id": "source-4fdeb2e8e2d2bb4e",
       "sha256": "0a926b429abb5a24b3474048155a386f72f818e01f5a77ba16511d7615ef8079"
     }
   },
@@ -41,7 +41,7 @@
   "baseline": {
     "harmbench_attack_success_count": 31,
     "harmbench_attack_success_rate": 15.5,
-    "harmbench_source": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/evaluation/base_bf16_full_v3/harmbench/official_scored.jsonl"
+    "harmbench_source_id": "source-e62f7ca7d3def99c"
   },
   "selected": {
     "effective_lambda": 0.3,
@@ -49,11 +49,11 @@
     "positive_h_neurons": 29,
     "positive_ratio_per_mille": 0.0828079312865497,
     "approximate_target_neurons": 37.471817559373534,
-    "ranking": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/classifiers/classifier_c3p33333333_positive.csv",
+    "ranking_id": "source-9b3a770ef1a5126a",
     "ranking_sha256": "018af69e1a748ea3873df9546c3f0eac3e86767fe2984bf91525c5d2078ed129",
-    "classifier_model": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/classifiers/classifier_c3p33333333.pkl",
+    "classifier_model_id": "source-f7c1f1b077a4b3c1",
     "classifier_model_sha256": "86b574b0a3258fcda463223740496d280f6905eb77187b5c4a4aad24df6a9e0c",
-    "source_report": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/classifier_scan_round_00.json",
+    "source_report_id": "source-00104426203b0c8c",
     "source_report_sha256": "bd2b2194ae09906751453a8b4833aa32c172dd1a088e80d13ec51857db0605c1",
     "train": {
       "accuracy": 0.926829268292683,
@@ -67,15 +67,15 @@
     "multiplier": 0.0,
     "harmbench_attack_success_count": 33,
     "harmbench_attack_success_rate": 16.5,
-    "harmbench_summary": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/subset_eval/lambda_0p3_k29_m0/harmbench/summary.json",
+    "harmbench_summary_id": "source-7252ba4581975065",
     "evaluation_provenance": {
       "run_config": {
-        "path": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/subset_eval/lambda_0p3_k29_m0/run_config.json",
+        "path_id": "source-bcd96548d0b0fe9b",
         "sha256": "daef2d2b526953af46a4a9a5f167fe9bd634be67b7eb4cab1b4d58ceb3dde394"
       },
       "task_summaries": {
         "harmbench": {
-          "path": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/subset_eval/lambda_0p3_k29_m0/harmbench/summary.json",
+          "path_id": "source-7252ba4581975065",
           "sha256": "c7e867d48627f675d9a0117c1ef00c8e3ab5d6145f22443d9d01692c3174f156"
         }
       },
@@ -97,11 +97,11 @@
       "positive_h_neurons": 3,
       "positive_ratio_per_mille": 0.008566337719298244,
       "approximate_target_neurons": 3.50208,
-      "ranking": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/classifiers/classifier_c1p08941791_positive.csv",
+      "ranking_id": "source-0a9173c4f1e70dcf",
       "ranking_sha256": "8f1ab3aa1d39e7ea4277d8ed4ed787f19e1d972f54bc528c3f5bc07fbe80ee0b",
-      "classifier_model": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/classifiers/classifier_c1p08941791.pkl",
+      "classifier_model_id": "source-c6aab00ee813c4ad",
       "classifier_model_sha256": "0b9391c9cce1ccd89a671ec7ba7b9b908153acacd850095e48853450c654ad78",
-      "source_report": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/classifier_scan_round_04.json",
+      "source_report_id": "source-e543ec8442f15864",
       "source_report_sha256": "30cbaa06c53650cbf28d1f0fec8fb8a898b9546951428857f1374197776c22ed",
       "train": {
         "accuracy": 0.8146341463414634,
@@ -115,15 +115,15 @@
       "multiplier": 0.0,
       "harmbench_attack_success_count": 34,
       "harmbench_attack_success_rate": 17.0,
-      "harmbench_summary": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/subset_eval/lambda_0p917921_k3_m0/harmbench/summary.json",
+      "harmbench_summary_id": "source-bdd1a95d54e09e63",
       "evaluation_provenance": {
         "run_config": {
-          "path": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/subset_eval/lambda_0p917921_k3_m0/run_config.json",
+          "path_id": "source-0ad91580f181825a",
           "sha256": "befca487cbd62952af07b9c59e1ce6b10b1343716c43364a07dcc852d27905b9"
         },
         "task_summaries": {
           "harmbench": {
-            "path": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/subset_eval/lambda_0p917921_k3_m0/harmbench/summary.json",
+            "path_id": "source-bdd1a95d54e09e63",
             "sha256": "bcd27f17e940389adc8e8add28d2e2f6740f4d5631c1f849176b361d2bd6c426"
           }
         },
@@ -144,11 +144,11 @@
       "positive_h_neurons": 11,
       "positive_ratio_per_mille": 0.03140990497076023,
       "approximate_target_neurons": 11.455535903585256,
-      "ranking": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/classifiers/classifier_c1p5653922_positive.csv",
+      "ranking_id": "source-7b683053e47496d6",
       "ranking_sha256": "83a38e97f2f99d14ec73f7435f7894ac48a4445f669d5ac4afbc1d72f3030bd7",
-      "classifier_model": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/classifiers/classifier_c1p5653922.pkl",
+      "classifier_model_id": "source-e882fcb56e1d4d68",
       "classifier_model_sha256": "b83051552dc0208e2bbdefea7c7033b6bb72f5cc031644ddc47e8d443987b93b",
-      "source_report": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/classifier_scan_round_01.json",
+      "source_report_id": "source-3dfa2304d8a44f40",
       "source_report_sha256": "4856c4f266efe31449eff8b417e3e5e54568c9275873e153111303941a05d01d",
       "train": {
         "accuracy": 0.8695121951219512,
@@ -162,15 +162,15 @@
       "multiplier": 0.0,
       "harmbench_attack_success_count": 40,
       "harmbench_attack_success_rate": 20.0,
-      "harmbench_summary": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/subset_eval/lambda_0p638818_k11_m0/harmbench/summary.json",
+      "harmbench_summary_id": "source-ecaf19b2d8b1dae5",
       "evaluation_provenance": {
         "run_config": {
-          "path": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/subset_eval/lambda_0p638818_k11_m0/run_config.json",
+          "path_id": "source-1ed825dc3174776e",
           "sha256": "1639bdbdeea1bfad47a1b387adaebf0a06b315d485b73555bd5e5b8fd9be7ee9"
         },
         "task_summaries": {
           "harmbench": {
-            "path": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/subset_eval/lambda_0p638818_k11_m0/harmbench/summary.json",
+            "path_id": "source-ecaf19b2d8b1dae5",
             "sha256": "2b8ed9d2d6d9ea23da52bd92539f4fc863eff416222fd86a3d01006e2841e5a4"
           }
         },
@@ -191,11 +191,11 @@
       "positive_h_neurons": 29,
       "positive_ratio_per_mille": 0.0828079312865497,
       "approximate_target_neurons": 37.471817559373534,
-      "ranking": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/classifiers/classifier_c3p33333333_positive.csv",
+      "ranking_id": "source-9b3a770ef1a5126a",
       "ranking_sha256": "018af69e1a748ea3873df9546c3f0eac3e86767fe2984bf91525c5d2078ed129",
-      "classifier_model": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/classifiers/classifier_c3p33333333.pkl",
+      "classifier_model_id": "source-f7c1f1b077a4b3c1",
       "classifier_model_sha256": "86b574b0a3258fcda463223740496d280f6905eb77187b5c4a4aad24df6a9e0c",
-      "source_report": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/classifier_scan_round_00.json",
+      "source_report_id": "source-00104426203b0c8c",
       "source_report_sha256": "bd2b2194ae09906751453a8b4833aa32c172dd1a088e80d13ec51857db0605c1",
       "train": {
         "accuracy": 0.926829268292683,
@@ -209,15 +209,15 @@
       "multiplier": 0.0,
       "harmbench_attack_success_count": 33,
       "harmbench_attack_success_rate": 16.5,
-      "harmbench_summary": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/subset_eval/lambda_0p3_k29_m0/harmbench/summary.json",
+      "harmbench_summary_id": "source-7252ba4581975065",
       "evaluation_provenance": {
         "run_config": {
-          "path": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/subset_eval/lambda_0p3_k29_m0/run_config.json",
+          "path_id": "source-bcd96548d0b0fe9b",
           "sha256": "daef2d2b526953af46a4a9a5f167fe9bd634be67b7eb4cab1b4d58ceb3dde394"
         },
         "task_summaries": {
           "harmbench": {
-            "path": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/subset_eval/lambda_0p3_k29_m0/harmbench/summary.json",
+            "path_id": "source-7252ba4581975065",
             "sha256": "c7e867d48627f675d9a0117c1ef00c8e3ab5d6145f22443d9d01692c3174f156"
           }
         },
@@ -238,11 +238,11 @@
       "positive_h_neurons": 136,
       "positive_ratio_per_mille": 0.3883406432748538,
       "approximate_target_neurons": 122.5728,
-      "ranking": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/classifiers/classifier_c10_positive.csv",
+      "ranking_id": "source-7c85a6c1fabfabdd",
       "ranking_sha256": "0fa24b32b7e7fff6e87f3fc46f2520e4806f6b4bbb315d6a45029deb8c56e750",
-      "classifier_model": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/classifiers/classifier_c10.pkl",
+      "classifier_model_id": "source-fff67841aa5e903e",
       "classifier_model_sha256": "96bf4b798448ec6bfbcbd528babd07628c22fd66db98d4853ec5af9b8d2428cd",
-      "source_report": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/classifier_scan_round_00.json",
+      "source_report_id": "source-00104426203b0c8c",
       "source_report_sha256": "bd2b2194ae09906751453a8b4833aa32c172dd1a088e80d13ec51857db0605c1",
       "train": {
         "accuracy": 0.9780487804878049,
@@ -256,15 +256,15 @@
       "multiplier": 0.0,
       "harmbench_attack_success_count": 62,
       "harmbench_attack_success_rate": 31.0,
-      "harmbench_summary": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/subset_eval/lambda_0p1_k136_m0/harmbench/summary.json",
+      "harmbench_summary_id": "source-c9f2db008a7e16ba",
       "evaluation_provenance": {
         "run_config": {
-          "path": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/subset_eval/lambda_0p1_k136_m0/run_config.json",
+          "path_id": "source-8febf9d6248ae7a0",
           "sha256": "e0f327c05036d345153a5444c0d71ede9e4b62a52e0d9c0f471268656c63f10b"
         },
         "task_summaries": {
           "harmbench": {
-            "path": "unified_eval/results/qwen3_4b/safety/current_protocol_v3/h_neuron_minimalspan_v2/subset_eval/lambda_0p1_k136_m0/harmbench/summary.json",
+            "path_id": "source-c9f2db008a7e16ba",
             "sha256": "9d7b9934298a4fa0eaefdc77889bd2d9e3ad8a3e7048a4cbe14ff5155a0a8f96"
           }
         },

@@ -11,7 +11,7 @@ def cans_scales(gradient, fisher, epsilon, damping=None, cap=None):
     Use F + damping in both the direction and the quadratic budget. Omitted
     damping is the median over every Fisher coordinate, including zeros.
     The current protocol deploys the unmodified solution (cap=None).
-    Explicit historical clipping follows normalization without renormalization.
+    Optional clipping follows normalization without renormalization.
     """
     g, f = gradient.double(), fisher.double()
     if g.shape != f.shape or g.ndim != 2 or not g.numel():
@@ -50,7 +50,7 @@ def grad_only_scales(target_gradient, coefficient, cap=None, *, objective_sign=1
     ``objective_sign`` is +1 for safety/hallucination and -1 for toxicity.
     ``target_gradient`` is the target log-probability gradient before applying
     that task sign. No ranking, Fisher division, damping, or normalization is
-    applied. Explicit ``cap`` remains available for historical comparisons.
+    applied. An explicit ``cap`` applies coordinate-wise clipping.
     """
     if (target_gradient.ndim != 2 or not target_gradient.numel()
             or target_gradient.dtype != torch.float32
