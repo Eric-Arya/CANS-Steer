@@ -49,22 +49,39 @@ Frozen domain responses ──> Target gradients ──┐
 Frozen WikiText responses ──> Fisher diagonal ─┘
 ```
 
-Let $g$ be the target log-probability gradient and $h = s g$, where
-$s = +1$ for safety/hallucination and $s = -1$ for toxicity. With Fisher diagonal
-$F$ and damping $\lambda$, CANS uses $D = \mathrm{diag}(F + \lambda)$:
+Let $\boldsymbol{\alpha}$ collect the neuron scaling coefficients, with
+$\Delta\boldsymbol{\alpha}=\boldsymbol{\alpha}-\mathbf{1}$. The steering gradient
+$\mathbf{g}=\left.\nabla_{\boldsymbol{\alpha}}\mathcal{P}\right|_{\boldsymbol{\alpha}=\mathbf{1}}$
+already includes the proxy's task sign $\sigma$: $+1$ for safety/hallucination
+and $-1$ for toxicity. Let $F_j=F_{jj}$ be neuron $j$'s estimated Fisher diagonal
+entry. The damped diagonal constraint matrix is
 
 $$
-\delta = \sqrt{\frac{2\epsilon}{h^\top D^{-1}h}}\,D^{-1}h,
-\qquad \mathrm{scale} = 1 + \delta.
+\mathbf{F}=\operatorname{diag}(F_1,\ldots,F_d)+\lambda I,
+\qquad \lambda>0.
 $$
 
-Both the direction and the quadratic budget $\tfrac12\delta^\top D\delta$
-use the damped metric. For a zero gradient, the update is zero. Damping defaults
-to the median over all Fisher coordinates, including zeros.
-**CANS-Grad-Only** uses $\mathrm{scale} = 1 + s c g$ across all coordinates,
-retaining gradient signs without Fisher division, damping, ranking, or
-normalization. Current presets apply both methods without clipping
-(`cap: null`). Parameters are defined in the domain YAMLs under `configs/`.
+Under the budget
+$\tfrac12\Delta\boldsymbol{\alpha}^{\top}\mathbf{F}\Delta\boldsymbol{\alpha}\le\epsilon_{\mathrm{q}}$,
+the CANS solution for $\mathbf{g}\ne\mathbf{0}$ is
+
+$$
+\boldsymbol{\alpha}^{\star}
+=\mathbf{1}+
+\sqrt{\frac{2\epsilon_{\mathrm{q}}}
+{\mathbf{g}^{\top}\mathbf{F}^{-1}\mathbf{g}}}
+\,\mathbf{F}^{-1}\mathbf{g}.
+$$
+
+Both the direction and the quadratic budget use $\mathbf{F}$. For a zero
+gradient, $\boldsymbol{\alpha}=\mathbf{1}$. Damping defaults to the median over
+all Fisher coordinates, including zeros.
+**CANS-Grad-Only** uses $\alpha_j=1+c g_j$ across all coordinates, retaining
+both gradient signs without Fisher division, damping, ranking, or normalization.
+Current presets apply both methods without clipping (`cap: null`). The domain
+YAML keys `epsilon`, `damping`, and Grad-only `coefficient` correspond to
+$\epsilon_{\mathrm{q}}$, $\lambda$, and $c$, respectively. Stored target gradients
+exclude $\sigma$; the solver applies `objective_sign` once to obtain $\mathbf{g}$.
 
 ## Repository layout
 
@@ -325,6 +342,3 @@ its Apache-2.0 license. Sources:
 [MBPP](https://github.com/google-research/google-research/tree/master/mbpp),
 [MGSM](https://github.com/google-research/url-nlp/tree/main/mgsm),
 and [LM Evaluation Harness](https://github.com/EleutherAI/lm-evaluation-harness).
-
-MBPP and MGSM source revisions, evaluation splits, and bundled license/attribution
-files are listed in [`capability_sources.json`](samples/benchmarks/capability_sources.json).

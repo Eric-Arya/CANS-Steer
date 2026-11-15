@@ -242,11 +242,13 @@ metadata and formatting, including category-specific HarmBench judge fields.
 
 CANS-Grad-Only uses `cans_compute_neuron_scales.py --method grad-only`, then
 `generate_responses.py`. Its coefficient is read from the domain YAML, with
-`--coefficient C` available for a strength sweep. The update is
-`1 + objective_sign * C * target_gradient` over all signed FP32 coordinates,
+`--coefficient C` available for a strength sweep. In the paper's notation,
+$\alpha_j=1+c g_j$, where $\mathbf{g}$ is the signed FP32 steering gradient of
+$\mathcal{P}$ and $c$ is the CLI coefficient. The solver uses every coordinate,
 with no clipping, Top-K selection, Fisher division, damping, or normalization.
-The stored target gradient excludes the task sign, which the solver applies
-exactly once.
+Stored target gradients exclude the proxy's task sign $\sigma$; the solver
+applies `objective_sign` exactly once to obtain $\mathbf{g}$.
+
 ## Source attribution
 
 SN-Tune's importance calculation, GQA mapping, and sparse parameter updates
