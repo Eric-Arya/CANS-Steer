@@ -212,6 +212,37 @@ python scripts/evaluate_responses.py --aggregate \
   outputs/safety_mgsm_summary.json --output outputs/safety_capability.json
 ```
 
+## Full-Fisher approximation diagnostic
+
+```bash
+python scripts/cans_evaluate_approximation.py --config configs/toxicity.yaml \
+  --output outputs/toxicity_approximation
+```
+
+The script solves diagonal-Fisher CANS updates, evaluates the undamped full
+sample-Fisher quadratic along each update, and compares it with measured
+full-vocabulary `KL(base || edited)` on the frozen reference continuations.
+It retains all cross-neuron terms by accumulating `(sequence_score @ delta)^2`,
+without constructing a dense Fisher matrix. Damping is used for selecting the
+update and its budget, and is excluded from the KL prediction.
+
+The two-model epsilon presets live in `configs/evaluation.yaml` under
+`approximation.epsilon_presets`. They match the ten epsilon values per model
+in the paper's toxicity approximation figure. The current default computes
+median damping from the supplied Fisher, so these are new median-damping
+measurements rather than copied historical figure values.
+
+Use `--config configs/llama2_toxicity.yaml` with matching model-specific
+`--gradient`, `--fisher`, and `--reference` inputs for Llama-2. The full reference
+contains the configured 1,024 prompts and four frozen continuations per prompt.
+Score extraction uses FP32; actual KL uses BF16 model weights and FP64
+probabilities and reduction. Response-token KL is summed per continuation,
+then averaged over continuations. `--resume` continues a matching run.
+The output contains JSON/CSV diagnostics and approximation errors; no figure
+is generated. An optional `--score-index` binds existing FP32 score chunks to
+the model, reference tokens and extraction manifest; omit it to extract scores.
+See `--help` for separate stages and per-point KL jobs.
+
 ## Baselines
 
 We also release our implementations of **LoRA SFT, SN-Tune, DAP (with its

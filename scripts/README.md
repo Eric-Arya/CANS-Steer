@@ -23,6 +23,7 @@ for a local copy of the configured model. Write run outputs under `outputs/`.
 | `cans_generate_reference_corpus.py` | Sample and freeze WikiText reference continuations |
 | `extract.py` | Extract Grad/Fisher statistics, SN-Tune/DAP rankings, AurA scales, CAA vectors, or H-Neurons features |
 | `cans_compute_neuron_scales.py` | Solve CANS or Grad-only neuron scales |
+| `cans_evaluate_approximation.py` | Evaluate diagonal CANS updates with the full-Fisher quadratic and measured KL; JSON/CSV only |
 | `generate_responses.py` | Generate benchmark responses for CANS, Grad-only, all baselines, or the unmodified model |
 | `evaluate_responses.py` | Score generated responses and aggregate five complete capability benchmarks |
 

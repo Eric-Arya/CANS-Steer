@@ -202,3 +202,32 @@ capability_aggregate:
     mgsm: 550
   weighting: equal
   require_complete: true
+approximation:
+  epsilon_presets:
+    llama2:
+    - 0.019
+    - 0.038
+    - 0.05700000000000001
+    - 0.076
+    - 0.095
+    - 0.11400000000000002
+    - 0.133
+    - 0.152
+    - 0.17099999999999999
+    - 0.19
+    qwen3_4b:
+    - 0.048075540777604106
+    - 0.06410072103680547
+    - 0.08012590129600684
+    - 0.09615108155520821
+    - 0.12018885194401027
+    - 0.13354316882667808
+    - 0.1442266223328123
+    - 0.1602518025920137
+    - 0.17627698285121507
+    - 0.19230216311041642
+  kl_batch_size: 16
+  vocabulary_chunk_tokens: 8
+  model_dtype: bfloat16
+  probability_dtype: float64
+  seed: 112
