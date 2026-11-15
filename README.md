@@ -26,19 +26,16 @@ including WikiText as the general reference input. **We welcome reproduction and
 ## Release contents
 
 - **CANS implementation** for extracting target gradients and Fisher statistics,
-  solving neuron scales, and generating and evaluating steered responses.
+  computing neuron steering coefficients, and generating and evaluating responses.
 - **Baseline implementations** of LoRA SFT, SN-Tune, DAP, AurA, CAA, H-Neurons,
-  and the CANS-Grad-Only ablation, with model/domain configurations.
-- **Qwen3-4B reproduction data** for all three domains, including annotated CANS
-  and baseline corpora, frozen WikiText reference continuations, benchmark
-  inputs, and provenance manifests.
-- **Qwen3-4B artifacts** containing shared Fisher statistics, domain gradients,
-  and ready-to-use example steering coefficients.
+  and CANS-Grad-Only.
+- **Complete Qwen3-4B reproduction inputs and artifacts** across safety, toxicity,
+  and hallucination: annotated CANS and baseline corpora, frozen WikiText reference
+  continuations, benchmark inputs, provenance manifests, shared Fisher statistics,
+  domain gradients, and ready-to-use CANS steering coefficients.
 
-The code supports Qwen and Llama models. **Bundled corpora and artifacts target
-Qwen3-4B**; Llama configurations require separate model-specific inputs.
 See the [data inventory](samples/README.md) and
-[artifact inventory](cans/artifacts/README.md) for the exact release contents.
+[artifact inventory](cans/artifacts/README.md) for file contents and formats.
 
 ## Method overview
 
@@ -51,6 +48,23 @@ Frozen domain responses ──> Target gradients ──┐
                                              ├──> Neuron scales ──> Generation ──> Evaluation
 Frozen WikiText responses ──> Fisher diagonal ─┘
 ```
+
+Let $g$ be the target log-probability gradient and $h = s g$, where
+$s = +1$ for safety/hallucination and $s = -1$ for toxicity. With Fisher diagonal
+$F$ and damping $\lambda$, CANS uses $D = \mathrm{diag}(F + \lambda)$:
+
+$$
+\delta = \sqrt{\frac{2\epsilon}{h^\top D^{-1}h}}\,D^{-1}h,
+\qquad \mathrm{scale} = 1 + \delta.
+$$
+
+Both the direction and the quadratic budget $\tfrac12\delta^\top D\delta$
+use the damped metric. For a zero gradient, the update is zero. Damping defaults
+to the median over all Fisher coordinates, including zeros.
+**CANS-Grad-Only** uses $\mathrm{scale} = 1 + s c g$ across all coordinates,
+retaining gradient signs without Fisher division, damping, ranking, or
+normalization. Current presets apply both methods without clipping
+(`cap: null`). Parameters are defined in the domain YAMLs under `configs/`.
 
 ## Repository layout
 
@@ -111,27 +125,33 @@ CUDA_VISIBLE_DEVICES=0 python scripts/evaluate_responses.py \
 | Toxicity | `rtp` | `cans/artifacts/toxicity.pt` |
 | Hallucination | `truthfulqa` | `cans/artifacts/hallucination.pt` |
 
-Both scripts also accept `ifeval`, `bbh`, `mmlu`, `mbpp`, and `mgsm`. Paper
-Capability is the equal-weight mean of these five complete benchmark percentages. Evaluation uses BF16 and the complete frozen benchmark inputs.
+Both scripts also accept `ifeval`, `bbh`, `mmlu`, `mbpp`, and `mgsm`.
 Omit `--scales` for the base model; use `--judge-model` for a local classifier.
 
-TruthfulQA's primary `score` is **True×Info (%)**: the fraction of responses
-accepted by both the official AllenAI truth and information judges. It is a
-same-response conjunction, not the product of the two aggregate percentages.
-Higher is better. The summary also reports `true_percent`, `info_percent` and
-`true_info_failure_percent = 100 - true_info_percent`. Use `--judge-model` for
-a local truth judge and `--info-judge-model` for a local information judge.
-Both judges evaluate the same extracted current-question answer interval.
-Official remote judges load the revisions pinned in `configs/evaluation.yaml`.
-For custom remote checkpoints, `--judge-revision` and `--info-judge-revision`
-select explicit versions. Local judge overrides use local files and record their
-resolved paths and configuration hashes instead of applying a remote revision.
+## Evaluation metrics
 
-Shared generation and scoring settings are centralized in
-[`configs/evaluation.yaml`](configs/evaluation.yaml). All model configurations
-inherit its runtime, benchmark limits, sampling settings and judge rules.
-MBPP and MGSM use the model-specific prompting and context policies described
-below; the other released benchmarks retain the shared 4,096-token context.
+The table summarizes the frozen evaluation sets and primary percentage scores
+configured in [`configs/evaluation.yaml`](configs/evaluation.yaml).
+
+| Benchmark | Evaluation size | Primary metric | Better |
+| --- | --- | --- | --- |
+| HarmBench | 400 prompts | Attack success rate (ASR) | Lower |
+| RealToxicityPrompts (`rtp`) | 600 prompts × 25 completions | Prompts with at least one toxic completion (%) | Lower |
+| TruthfulQA | 400 questions | True×Info: answers accepted by both judges (%) | Higher |
+| IFEval | 541 prompts | Strict prompt accuracy (%) | Higher |
+| BBH | 540 questions | Answer accuracy (%) | Higher |
+| MMLU | 570 questions | Constrained A–D accuracy (%) | Higher |
+| MBPP | 500 problems | Pass@1 (%) | Higher |
+| MGSM | 550 questions, 50 per language | Macro-average accuracy across 11 languages (%) | Higher |
+
+**Capability** is the equal-weight mean of IFEval, BBH, MMLU, MBPP, and MGSM.
+Aggregation requires all five complete results from the same model and
+intervention. TruthfulQA True×Info counts answers accepted by both judges on the
+same response; it is not the product of the two marginal percentages.
+
+Generation/scoring settings, model-specific prompts, stopping rules, and judge
+versions are documented in the [evaluation protocol](scripts/README.md#evaluation)
+and loaded from the shared YAML.
 
 ## Main pipeline
 
@@ -155,15 +175,11 @@ python scripts/cans_compute_neuron_scales.py \
   --output outputs/safety_cans.pt
 ```
 
-Replace `safety` with `toxicity` or `hallucination` as needed. Extraction uses
-FP32 and supports `--resume`. Target-gradient extraction adds BOS only when
-it is absent from the formatted prompt; native Llama-3/3.1 chat templates
-already contain it. Resume requires matching data, settings and tokenization.
-Omit `--gradient` and `--fisher` to reuse the included statistics. Pass the resulting coefficients to `scripts/generate_responses.py`.
-Fisher inputs must bind the configured model and exact reference file, including
-its SHA-256, continuation count, extraction scope, precision and coordinates.
-Changing `reference_data` requires Fisher statistics extracted from that reference;
-a compatible tensor shape alone does not establish compatibility.
+Replace `safety` with `toxicity` or `hallucination` as needed. Omit `--gradient`
+and `--fisher` to reuse the included statistics. Extraction uses FP32 and
+supports `--resume`; evaluation uses BF16. See
+[extraction identity and resume](scripts/README.md#extraction-identity-and-resume)
+for BOS handling and model/reference compatibility checks.
 
 The domain YAMLs record the strongest-domain epsilon presets and use no
 coefficient clipping (`cap: null`). Damping is computed from the median over
@@ -178,15 +194,6 @@ python scripts/cans_compute_neuron_scales.py \
   --output outputs/safety_grad_only.pt
 ```
 
-For Llama-2 and its derived checkpoints, IFEval scoring uses only the first
-response before a literal `### Instruction:` delimiter. The same preprocessing
-is used for strict and loose scoring; original generated text remains stored.
-Other models retain their existing IFEval scoring protocol. The scoring CLI
-reads the model identity from generation metadata. For external saved responses
-without that metadata, provide `--model` with a recognized model ID or a local
-checkpoint containing `config.json`. Missing or conflicting model identity is
-rejected before scoring; `--model` does not change the saved generation.
-
 ## MBPP, MGSM, and aggregate capability
 
 ```bash
@@ -196,25 +203,10 @@ python scripts/evaluate_responses.py --benchmark mbpp \
   --responses outputs/safety_mbpp.jsonl --output outputs/safety_mbpp_summary.json
 ```
 
-Replace `mbpp` with `mgsm` for multilingual math. MBPP uses all 500 test
-problems (IDs 11–510), one greedy completion, and 512 response tokens. Native
-chat uses demonstrations 2/3/4 and three visible assertions. Llama-2 uses raw
-prompts, demonstration 2, and one visible assertion. Scoring executes the original
-setup and all three assertions, with no code repair or best-of selection.
-
-MGSM uses the same seed-42 selection of 50 aligned questions in each of 11
-languages. Native chat uses six ordered official native-language CoT examples,
-2,048 response tokens, and EOS/token-budget stopping. Llama-2 uses raw prompts
-within its native 4,096 context, with te=1, bn=3, th=4 and six examples for other
-languages; all official native next-question labels also stop generation. Only
-Telugu may reduce the response budget to the remaining context. Prompts and
-examples are never truncated. Numeric scoring extracts the last signed number,
-normalizes Unicode digits, and removes grouping commas.
-
-Both use greedy BF16 decoding and seed 112. Their context capacity is 8,192
-for instruction-tuned models and 4,096 for Llama-2. Aggregate capability requires
-complete IFEval-541, BBH-540, MMLU-570, MBPP-500 and MGSM-550 summaries from
-the same model and intervention; partial sets do not receive an average.
+Replace `mbpp` with `mgsm` for multilingual math. Model-specific demonstrations,
+response budgets, stopping rules, and scoring are described in the
+[MBPP and MGSM protocols](scripts/README.md#mbpp-and-mgsm-protocols).
+After generating and scoring all five capability benchmarks, aggregate them:
 
 ```bash
 python scripts/evaluate_responses.py --aggregate \
@@ -230,29 +222,11 @@ python scripts/cans_evaluate_approximation.py --config configs/toxicity.yaml \
   --output outputs/toxicity_approximation
 ```
 
-The script solves diagonal-Fisher CANS updates, evaluates the undamped full
-sample-Fisher quadratic along each update, and compares it with measured
-full-vocabulary `KL(base || edited)` on the frozen reference continuations.
-It retains all cross-neuron terms by accumulating `(sequence_score @ delta)^2`,
-without constructing a dense Fisher matrix. Damping is used for selecting the
-update and its budget, and is excluded from the KL prediction.
-
-The two-model epsilon presets live in `configs/evaluation.yaml` under
-`approximation.epsilon_presets`. They match the ten epsilon values per model
-in the paper's toxicity approximation figure. Damping is computed as the median over all coordinates of the supplied Fisher.
-
-Bundled data, statistics, and coefficients target Qwen3 only. The Llama-2
-epsilon preset is a configuration example, not a ready-to-run numerical
-reproduction package. To use `--config configs/llama2_toxicity.yaml`, supply
-your own model-matched `--gradient`, `--fisher`, and `--reference` inputs. The full reference
-contains the configured 1,024 prompts and four frozen continuations per prompt.
-Score extraction uses FP32; actual KL uses BF16 model weights and FP64
-probabilities and reduction. Response-token KL is summed per continuation,
-then averaged over continuations. `--resume` continues a matching run.
-The output contains JSON/CSV diagnostics and approximation errors; no figure
-is generated. An optional `--score-index` binds existing FP32 score chunks to
-the model, reference tokens and extraction manifest; omit it to extract scores.
-See `--help` for separate stages and per-point KL jobs.
+This script compares the undamped full sample-Fisher quadratic with measured
+`KL(base || edited)` along diagonal-Fisher CANS updates. It uses the paper's
+ten-point epsilon preset for the configured model and writes JSON/CSV results.
+See the [diagnostic protocol](scripts/README.md#full-fisher-approximation-diagnostic)
+for reference inputs, precision, caching, and resume options.
 
 ## Baselines
 
@@ -348,4 +322,9 @@ its Apache-2.0 license. Sources:
 [WikiText](https://huggingface.co/datasets/Salesforce/wikitext),
 [HarmBench](https://github.com/centerforaisafety/HarmBench),
 [IFEval](https://github.com/google-research/google-research/tree/master/instruction_following_eval),
+[MBPP](https://github.com/google-research/google-research/tree/master/mbpp),
+[MGSM](https://github.com/google-research/url-nlp/tree/main/mgsm),
 and [LM Evaluation Harness](https://github.com/EleutherAI/lm-evaluation-harness).
+
+MBPP and MGSM source revisions, evaluation splits, and bundled license/attribution
+files are listed in [`capability_sources.json`](samples/benchmarks/capability_sources.json).
