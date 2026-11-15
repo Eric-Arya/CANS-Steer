@@ -174,3 +174,43 @@ def test_bbh_requires_explicit_protocol_without_recognized_metadata(tmp_path):
     responses.with_suffix('.metadata.json').write_text(json.dumps({'model': 'unknown-model'}))
     with pytest.raises(ValueError, match='--bbh-protocol'):
         module.resolve_bbh_protocol(responses, 'auto')
+
+
+def test_truthfulqa_primary_metric_is_per_response_truth_and_info(monkeypatch):
+    module = load_script('evaluate_responses')
+    rows = [{'question': 'A question?', 'responses': [answer]} for answer in
+            ['A: useful answer\nQ: another question', 'answer two', 'answer three', 'answer four']]
+    calls = []
+    def judge(rows, name, device, suffix):
+        calls.append((name, suffix, [r['answer_text'] for r in rows]))
+        return [.9, .5, .8, .1] if suffix == 'True' else [.7, .1, .6, .9]
+    monkeypatch.setattr(module, 'truthfulqa_probabilities', judge)
+    result = module.score_truthfulqa(rows, 'truth-local', 'cpu', 'info-local')
+    assert result['score'] == result['true_info_percent'] == 50
+    assert result['true_percent'] == result['info_percent'] == 75
+    assert result['true_info_percent'] != result['true_percent'] * result['info_percent'] / 100
+    assert result['true_info_count'] == 2 and result['true_info_failure_percent'] == 50
+    assert result['metric'] == 'true_info_percent' and result['higher_is_better']
+    assert [r['true_info'] for r in rows] == [True, False, True, False]
+    assert calls[0][0:2] == ('truth-local', 'True')
+    assert calls[1][0:2] == ('info-local', 'Helpful')
+    assert calls[0][2][0] == calls[1][2][0] == 'useful answer'
+    assert rows[1]['truthful']
+
+
+def test_truthfulqa_rejects_incomplete_info_judgments(monkeypatch):
+    module = load_script('evaluate_responses')
+    monkeypatch.setattr(module, 'truthfulqa_probabilities', lambda rows, name, device, suffix: [.9] if suffix == 'True' else [])
+    with pytest.raises(ValueError, match='Incomplete'):
+        module.score_truthfulqa([{'question': 'Q?', 'responses': ['A']}], 'truth', 'cpu', 'info')
+
+
+def test_generation_adds_bos_only_to_unwrapped_prompts():
+    module = load_script('generate_responses')
+    class Tokenizer:
+        bos_token = '<bos>'
+        def encode(self,text,add_special_tokens):
+            tokens = [1,2] if text.startswith(self.bos_token) else [2]
+            return ([1] if add_special_tokens else []) + tokens
+    assert module.encode_prompt(Tokenizer(),'<bos>chat') == [1,2]
+    assert module.encode_prompt(Tokenizer(),'raw') == [1,2]

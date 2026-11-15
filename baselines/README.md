@@ -99,13 +99,19 @@ python scripts/extract.py --config configs/baselines/qwen3_safety.yaml \
   --output outputs/safety_dap.pt
 ```
 
-SFT checkpoints are saved every three epochs. For a new stopping-criterion
-run, evaluate each checkpoint on the complete domain and capability benchmarks,
-then continue only while average capability has not fallen below the matching
-CANS point and the undesirable-behavior rate has not fallen below that point.
-The supplied Qwen3 configurations end at the reported epochs: 30 for safety
-and toxicity, 15 for hallucination. Each checkpoint includes the AdamW state
-in `training_state.pt`; its epoch and step are recorded in `metadata.json`.
+SFT checkpoints are saved every three epochs. For a new early-stopping run,
+use `--until-epoch` to pause at each checkpoint and measure the undesirable-
+behavior rate on the complete domain benchmark used for the matching CANS
+point. Stop at the first checkpoint whose rate is strictly lower than that
+CANS point's rate. At equality or above, resume training up to the configured
+epoch limit. This rate is the sole early-stopping metric.
+SFT YAML separates `epochs` (the training ceiling) from `reported_epoch` (the
+checkpoint used in the paper). Pass `--reported-checkpoint` to reproduce that
+configured checkpoint; use `--until-epoch` for staged early-stopping checks.
+Each checkpoint stores the AdamW state in `training_state.pt` and records its
+epoch and step in `metadata.json`. LoRA `rank`, `lora_alpha`, and `dropout`
+are read from the selected SFT YAML and validated before adapters are created. Llama model-specific corpora remain supplied
+by the user; no Llama training responses are bundled.
 
 SN-Tune retains at most 25 coordinates per layer and parameter structure,
 after mapping GQA coordinates to physical rows. It uses 20 epochs, learning
@@ -176,7 +182,13 @@ Evaluate their multiplier-0 interventions on HarmBench-200, RTP-100, or
 TruthfulQA-100. Select jointly using held-out classifier accuracy and domain
 performance; general-capability scores do not participate. Qwen3 selected
 counts are 29, 105, and 127. Final multipliers are 0, 0.25, 0.5, and 0.75.
-Llama selected counts are 193, 125, and 68; there is no fixed K=9 exception.
+Llama selected counts are 193, 125, and 5. The Llama-3.1 hallucination YAML
+records the short-span corpus protocol, selected lambda, selected coordinates,
+and reported multiplier. `--fit-selected` verifies the supplied corpus against
+the feature artifact and checks the refitted coordinates against that recorded
+set; source hashes are saved with the result. The default H-Neurons multiplier
+is loaded from `reported_multiplier` when supplied; `--strength` overrides it.
+Llama corpora, features and classifiers must be provided by the user.
 
 Selection commands consume a JSON file with this schema; `domain_score`
 is the undesirable-behavior percentage (lower is better):

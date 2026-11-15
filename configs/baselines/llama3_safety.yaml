@@ -3,10 +3,11 @@ domain: safety
 benchmark: harmbench
 sft:
   data: samples/baselines/llama3_safety/sft.jsonl
-  count: 256
+  count: 141
   format: raw
   target: span
-  epochs: 15
+  epochs: 30
+  reported_epoch: 30
   checkpoint_every: 3
   seed: 112
   learning_rate: 5.0e-05

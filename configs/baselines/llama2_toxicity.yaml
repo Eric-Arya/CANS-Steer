@@ -6,7 +6,8 @@ sft:
   count: 500
   format: raw
   target: response
-  epochs: 3
+  epochs: 30
+  reported_epoch: 3
   checkpoint_every: 3
   seed: 112
   learning_rate: 5.0e-05

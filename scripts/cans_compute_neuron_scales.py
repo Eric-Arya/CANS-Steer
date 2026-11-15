@@ -5,7 +5,7 @@ from pathlib import Path
 
 import torch
 
-from cans.data_processing import config, save_tensor, sha256
+from cans.data_processing import config, save_tensor, sha256, validate_fisher_binding
 from cans.scaling_solver import cans_scales, grad_only_scales
 
 
@@ -46,14 +46,13 @@ def main(argv=None):
     if args.method == "cans":
         fisher_path = args.fisher or root / common["fisher_artifact"]
         curvature = torch.load(fisher_path, map_location="cpu", weights_only=True)
-        if (curvature["metadata"]["model_config_sha256"] != common["model_config_sha256"]
-                or curvature["metadata"]["estimator"] != "whole-response-logprob-gradient-square"):
-            raise ValueError("Expected matching whole-response Fisher")
+        fisher_binding = validate_fisher_binding(
+            curvature, common, root/common["reference_data"], fisher_path)
         scales, diagnostics = cans_scales(
-            domain["objective_sign"] * gradient, curvature["fisher"], **domain["cans"])
+            domain["objective_sign"] * gradient, curvature["fisher"].reshape(common["shape"]), **domain["cans"])
         if diagnostics["capped_fraction"] > 0.15:
             raise ValueError("Saturation exceeds the recorded 15% limit")
-        metadata.update(diagnostics, fisher_sha256=sha256(fisher_path))
+        metadata.update(diagnostics, fisher_sha256=sha256(fisher_path), fisher_binding=fisher_binding)
     elif args.method == "grad-only":
         binding = artifact["metadata"]
         if (binding.get("scope") != "global/all-token"

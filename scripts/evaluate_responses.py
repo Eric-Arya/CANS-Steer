@@ -33,17 +33,49 @@ def is_llama2_model(model):
     """Recognize the model family, including a local derived native checkpoint."""
     if model is None:
         return False
-    name = str(model).lower()
-    if name == 'llama2' or 'llama-2' in name:
-        return True
     path = Path(model)/'config.json'
-    if not path.is_file():
-        return False
-    configuration = json.loads(path.read_text())
-    return (configuration.get('model_type') == 'llama'
-            and configuration.get('vocab_size') == 32000
-            and configuration.get('max_position_embeddings') == 4096
-            and not configuration.get('rope_scaling'))
+    if path.is_file():
+        configuration = json.loads(path.read_text())
+        return (configuration.get('model_type') == 'llama'
+                and configuration.get('vocab_size') == 32000
+                and configuration.get('max_position_embeddings') == 4096
+                and not configuration.get('rope_scaling'))
+    name = str(model).lower()
+    return name == 'llama2' or 'llama-2' in name
+
+
+def ifeval_model_policy(model):
+    """Identify whether first-response scoring is required without loading weights."""
+    if model is None:
+        return None
+    if is_llama2_model(model):
+        return 'llama2'
+    name = str(model).lower()
+    if any(family in name for family in ('qwen3', 'llama-3', 'llama3')):
+        return 'standard'
+    source = Path(model)/'config.json'
+    if source.is_file() and json.loads(source.read_text()).get('model_type'):
+        return 'standard'
+    return None
+
+
+def resolve_ifeval_model(generation, explicit=None):
+    """Require a known scoring policy and reject conflicting source identities."""
+    known = [(name, ifeval_model_policy(name)) for name in
+             (generation.get('model'), generation.get('model_source'))]
+    known = [(name, policy) for name, policy in known if policy is not None]
+    if len({policy for _, policy in known}) > 1:
+        raise ValueError('Conflicting IFEval model families in generation metadata')
+    if explicit is not None:
+        policy = ifeval_model_policy(explicit)
+        if policy is None:
+            raise ValueError('Cannot identify IFEval model policy; pass --model with a known model ID or local checkpoint config')
+        if known and policy != known[0][1]:
+            raise ValueError('--model conflicts with the IFEval model family in generation metadata')
+        return explicit
+    if not known:
+        raise ValueError('Cannot identify IFEval model from generation metadata; pass --model')
+    return known[0][0]
 
 
 def score_ifeval(rows, external, model=None):
@@ -159,10 +191,29 @@ def extract_answer(response, question):
     return answer[:boundary.start()].strip() if boundary else answer
 
 
-def truthfulqa_probabilities(rows, model_name, device, suffix):
-    """Score one official binary judge and release its model afterward."""
-    model, tokenizer = load_model(model_name, device=device)
+def truthfulqa_judge_source(model_name, kind, revision=None):
+    """Pin official remote judges; local/custom overrides retain their own identity."""
     settings = evaluation_config()["judges"]["truthfulqa"]
+    path = Path(model_name)
+    local = path.is_dir()
+    if local and revision is not None:
+        raise ValueError('A local judge has no remote revision; omit the revision override')
+    effective = (None if local else revision if revision is not None else
+                 settings[f'{kind}_revision'] if str(model_name) == settings[f'{kind}_model'] else None)
+    source = dict(model=str(path.resolve()) if local else str(model_name),
+                  revision=effective, source='local' if local else 'huggingface')
+    if local:
+        source['files_sha256'] = {name: sha256(path/name) for name in
+            ('config.json', 'tokenizer_config.json', 'special_tokens_map.json') if (path/name).is_file()}
+    return source
+
+
+def truthfulqa_probabilities(rows, model_name, device, suffix, *, revision=None):
+    """Score one official binary judge and release its model afterward."""
+    settings = evaluation_config()["judges"]["truthfulqa"]
+    kind = 'truth' if suffix == settings['truth_suffix'] else 'info'
+    source = truthfulqa_judge_source(model_name, kind, revision)
+    model, tokenizer = load_model(model_name, device=device, revision=source['revision'])
     labels = [tokenizer.encode(word, add_special_tokens=False) for word in settings["labels"]]
     if any(len(ids) != 1 for ids in labels):
         raise ValueError("TruthfulQA judges require single-token yes/no labels")
@@ -181,20 +232,24 @@ def truthfulqa_probabilities(rows, model_name, device, suffix):
     return probabilities
 
 
-def score_truthfulqa(rows, model_name, device, info_model_name=None):
+def score_truthfulqa(rows, model_name, device, info_model_name=None, *,
+                    judge_revision=None, info_judge_revision=None):
     """Primary metric: both official judges accept the same response."""
     if not rows:
         raise ValueError("TruthfulQA requires nonempty responses")
     settings = evaluation_config()["judges"]["truthfulqa"]
     model_name = model_name or settings["truth_model"]
     info_model_name = info_model_name or settings["info_model"]
+    sources = dict(truth=truthfulqa_judge_source(model_name, 'truth', judge_revision),
+                   info=truthfulqa_judge_source(info_model_name, 'info', info_judge_revision))
     for row in rows:
         row["answer_text"] = extract_answer(row["responses"][0], row["question"])
-    for field, label, name, suffix in (
-        ("truth_probability", "truthful", model_name, settings["truth_suffix"]),
-        ("info_probability", "informative", info_model_name, settings["info_suffix"]),
+    for field, label, name, suffix, revision in (
+        ("truth_probability", "truthful", model_name, settings["truth_suffix"], judge_revision),
+        ("info_probability", "informative", info_model_name, settings["info_suffix"], info_judge_revision),
     ):
-        values = truthfulqa_probabilities(rows, name, device, suffix)
+        values = (truthfulqa_probabilities(rows, name, device, suffix) if revision is None else
+                  truthfulqa_probabilities(rows, name, device, suffix, revision=revision))
         if len(values) != len(rows):
             raise ValueError("Incomplete TruthfulQA judge output")
         for row, probability in zip(rows, values, strict=True):
@@ -211,6 +266,7 @@ def score_truthfulqa(rows, model_name, device, info_model_name=None):
             "true_info_count": joint_count, "true_info_failure_percent": 100 - joint,
             "hallucination_percent": 100 - joint,
             "judges": {"truth": str(model_name), "info": str(info_model_name)},
+            "judge_sources": sources,
             "judge_protocol": "same-response conjunction; yes iff normalized yes/no probability_yes >= 0.5"}
 
 
@@ -297,8 +353,11 @@ def main():
                         help="Frozen benchmark JSONL directory for this model")
     parser.add_argument("--benchmark-file", type=Path, help="Frozen baseline selection JSONL; omit for complete benchmark")
     parser.add_argument("--judge-model", help="Override the official classifier path")
+    parser.add_argument("--judge-revision", help="TruthfulQA remote truth-judge revision override")
     parser.add_argument("--info-judge-model",
                         help="Official information judge, or its matching local path")
+    parser.add_argument("--info-judge-revision", help="TruthfulQA remote information-judge revision override")
+    parser.add_argument("--model", help="IFEval source model ID or local checkpoint; required when generation metadata does not identify the model")
     parser.add_argument("--bbh-protocol", choices=["auto", "qwen3", "llama"], default="auto",
                         help="BBH scoring protocol; auto reads the model from the response .metadata.json")
     parser.add_argument("--device", default="cuda:0")
@@ -307,6 +366,8 @@ def main():
     if args.aggregate:
         if args.benchmark or args.responses:
             parser.error('--aggregate cannot be combined with --benchmark/--responses')
+        if args.model is not None or args.judge_revision is not None or args.info_judge_revision is not None:
+            parser.error('Model and judge revision overrides require an individual benchmark')
         summary = aggregate_capability(args.aggregate, evaluation_config()['capability_aggregate'])
         args.output.parent.mkdir(parents=True,exist_ok=True)
         args.output.write_text(json.dumps(summary,indent=2)+'\n')
@@ -314,6 +375,10 @@ def main():
         return
     if not args.benchmark or not args.responses:
         parser.error('--benchmark and --responses are required unless using --aggregate')
+    if args.model is not None and args.benchmark != 'ifeval':
+        parser.error('--model is an IFEval scoring identity override')
+    if (args.judge_revision is not None or args.info_judge_revision is not None) and args.benchmark != 'truthfulqa':
+        parser.error('Judge revision overrides apply only to TruthfulQA')
     rows = read_jsonl(args.responses)
     frozen = read_jsonl(args.benchmark_file or args.benchmark_data / f"{args.benchmark}.jsonl")
     if [r["id"] for r in rows] != [r["id"] for r in frozen]:
@@ -326,9 +391,7 @@ def main():
     if args.benchmark in ('mbpp','mgsm'):
         summary = score_extension(rows, frozen, args.benchmark, evaluation_config()['scoring'][args.benchmark])
     elif args.benchmark == "ifeval":
-        model = generation.get('model')
-        if not is_llama2_model(model) and is_llama2_model(generation.get('model_source')):
-            model = generation['model_source']
+        model = resolve_ifeval_model(generation, args.model)
         summary = score_ifeval(rows, args.external, model=model)
     elif args.benchmark == "bbh":
         summary = score_bbh(rows, resolve_bbh_protocol(args.responses, args.bbh_protocol))
@@ -336,7 +399,9 @@ def main():
         summary = score_mmlu(rows)
     elif args.benchmark == "truthfulqa":
         summary = score_truthfulqa(rows, args.judge_model,
-                                  args.device, args.info_judge_model)
+                                  args.device, args.info_judge_model,
+                                  judge_revision=args.judge_revision,
+                                  info_judge_revision=args.info_judge_revision)
     elif args.benchmark == "rtp":
         summary = score_toxicity(rows, args.judge_model or evaluation_config()["judges"]["rtp"]["model"], args.device)
     else:

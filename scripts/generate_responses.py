@@ -31,6 +31,12 @@ def encode_prompt(tokenizer, text):
     return tokenizer.encode(text, add_special_tokens=not bool(bos and text.startswith(bos)))
 
 
+def configured_strength(explicit, spec, method):
+    if explicit is not None:
+        return explicit
+    return spec.get('h_neurons', {}).get('reported_multiplier', 1.) if method == 'h_neurons' else 1.
+
+
 def generate_vllm(args, common, rows, settings):
     common, settings = resolve_task(common, args.benchmark, settings)
     runtime = common.get("evaluation_runtime", evaluation_config()["runtime"])
@@ -198,7 +204,7 @@ def main(argv=None):
     intervention.add_argument('--scales', type=Path, help='CANS or Grad-only neuron scales (vLLM)')
     intervention.add_argument('--artifact', type=Path, help='Baseline intervention artifact (Transformers)')
     parser.add_argument('--guide', type=Path, help='Matching IA3-DPO artifact for DAP')
-    parser.add_argument('--strength', type=float, default=1., help='SN/CAA strength or H-Neurons multiplier')
+    parser.add_argument('--strength', type=float, help='SN/CAA strength or H-Neurons multiplier; defaults to the configured reported H setting, otherwise 1')
     parser.add_argument('--layer', type=int, help='CAA candidate layer for an unselected vector artifact')
     parser.add_argument('--candidate', type=int, help='H-Neurons candidate index for a scan artifact')
     parser.add_argument('--input', type=Path, help='Frozen selection inputs; omit for the complete benchmark')
@@ -215,6 +221,8 @@ def main(argv=None):
         parser.error('--layer and --candidate apply to baseline artifacts')
     if args.output.exists():
         raise FileExistsError(f'Use a fresh output path: {args.output}')
+    artifact_method = torch.load(args.artifact, map_location='cpu', weights_only=True)['method'] if args.artifact else None
+    args.strength = configured_strength(args.strength, spec, artifact_method)
     common, settings = resolve_task(common, args.benchmark, common['evaluation'][args.benchmark])
     source = args.input or (root / settings['input'] if settings.get('input') else root / common.get('benchmark_data', 'samples/benchmarks') / f'{args.benchmark}.jsonl')
     rows = read_jsonl(source)

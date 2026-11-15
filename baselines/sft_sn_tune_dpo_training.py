@@ -1,5 +1,6 @@
 """Portable LoRA SFT, sparse SN-Tune, and MLP-only IA3-DPO training."""
 import math
+from numbers import Real
 import random
 from pathlib import Path
 import torch
@@ -49,6 +50,20 @@ def preference_rows(tokenizer,rows,cfg):
     return result
 
 
+def lora_settings(cfg):
+    """Read configured adapter parameters, retaining defaults for older callers."""
+    rank = cfg.get('rank', 8)
+    alpha = cfg.get('lora_alpha', 16)
+    dropout = cfg.get('dropout', 0.)
+    if type(rank) is not int or rank <= 0:
+        raise ValueError('LoRA rank must be a positive integer')
+    if isinstance(alpha, bool) or not isinstance(alpha, Real) or not math.isfinite(alpha) or alpha <= 0:
+        raise ValueError('LoRA lora_alpha must be finite and positive')
+    if isinstance(dropout, bool) or not isinstance(dropout, Real) or not math.isfinite(dropout) or not 0 <= dropout < 1:
+        raise ValueError('LoRA dropout must be finite and in [0, 1)')
+    return dict(r=rank, lora_alpha=alpha, lora_dropout=dropout)
+
+
 def train(model,tokenizer,rows,cfg,method,output,metadata,selection=None,resume=None,until_epoch=None):
     output=Path(output)
     output.mkdir(parents=True,exist_ok=True)
@@ -57,7 +72,7 @@ def train(model,tokenizer,rows,cfg,method,output,metadata,selection=None,resume=
     model.config.use_cache=False
     if method=='sft':
         from peft import LoraConfig, get_peft_model
-        model=get_peft_model(model,LoraConfig(r=8,lora_alpha=16,lora_dropout=0.,task_type='CAUSAL_LM',
+        model=get_peft_model(model,LoraConfig(**lora_settings(cfg),task_type='CAUSAL_LM',
             target_modules=['q_proj','k_proj','v_proj','o_proj','gate_proj','up_proj','down_proj']))
         encoded=sft_rows(tokenizer,rows,cfg)
     elif method=='sn_tune':

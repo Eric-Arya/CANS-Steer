@@ -6,7 +6,8 @@ sft:
   count: 133
   format: chat
   target: response
-  epochs: 15
+  epochs: 30
+  reported_epoch: 6
   checkpoint_every: 3
   seed: 112
   learning_rate: 5.0e-05
@@ -95,7 +96,16 @@ h_neurons:
   split: samples/baselines/llama31_hallucination/h_split.json
   selection_data: samples/baselines/llama31_hallucination/caa_selection.jsonl
   lambda_search: adaptive
-  paper_neuron_count: 68
+  paper_neuron_count: 5
+  selected_lambda: 0.542914879919
+  reported_multiplier: 0.5
+  corpus_protocol: short answer spans; 133 true and 133 false model-matched responses
+  selected_coordinates:
+  - [4, 12934]
+  - [8, 3529]
+  - [23, 10303]
+  - [26, 2589]
+  - [26, 6085]
   multipliers:
   - 0.0
   - 0.25

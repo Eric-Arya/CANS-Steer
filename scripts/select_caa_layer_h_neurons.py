@@ -28,10 +28,24 @@ def main():
     if a.fit_selected:
         if a.method!='h_neurons':p.error('--fit-selected applies only to H-Neurons')
         if 'selected_lambda' not in cfg:p.error('This model needs a recorded selected_lambda in its config')
+        data=root/cfg['data'];rows=read_jsonl(data)
+        if len(rows)!=cfg.get('count',len(rows)):
+            raise ValueError('Frozen H-Neurons corpus count mismatch')
         split=json.loads((root/cfg['split']).read_text())
+        validate_split(rows,split)
+        if obj['metadata'].get('sources',{}).get(data.name)!=sha256(data):
+            raise ValueError('Features belong to another H-Neurons corpus')
+        if len(obj['features'])!=len(rows) or {r['id'] for r in obj['features']}!={r['id'] for r in rows}:
+            raise ValueError('Features do not cover the configured H-Neurons corpus')
         result=fit(obj['features'],split,cfg['selected_lambda'])
+        if cfg.get('selected_coordinates'):
+            expected=sorted(layer*result['shape'][1]+neuron for layer,neuron in cfg['selected_coordinates'])
+            if result['selected'].tolist()!=expected:
+                raise ValueError('Refitted classifier differs from the recorded selected neuron set')
         result.update(metadata=obj['metadata'],method='h_neurons',split_sha256=sha256(root/cfg['split']),
-                      selection={'mode':'refit recorded selected lambda','lambda':cfg['selected_lambda']})
+                      selection={'mode':'refit recorded selected lambda','lambda':cfg['selected_lambda'],
+                                 'corpus_sha256':sha256(data),'features_sha256':sha256(a.artifact),
+                                 'reported_multiplier':cfg.get('reported_multiplier')})
         save_tensor(a.output,result)
         return
     if a.scan:

@@ -77,6 +77,17 @@ python scripts/evaluate_responses.py --benchmark bbh --bbh-protocol llama \
   --responses outputs/llama_bbh.jsonl --output outputs/llama_bbh_summary.json
 ```
 
+For IFEval responses without generation metadata, supply the source model:
+
+```bash
+python scripts/evaluate_responses.py --benchmark ifeval \
+  --model meta-llama/Llama-2-7b-hf --benchmark-data /path/to/llama2/benchmarks \
+  --responses outputs/llama2_ifeval.jsonl --output outputs/llama2_ifeval_summary.json
+```
+
+This selects the Llama-2 first-response preprocessing before strict and loose
+scoring. Unresolved model identities and metadata/policy conflicts are rejected.
+
 Supply the matching model's frozen benchmark inputs. Llama BBH inputs must
 contain the paper's three worked demonstrations; choosing a scoring protocol
 does not change the prompts used to generate existing responses.

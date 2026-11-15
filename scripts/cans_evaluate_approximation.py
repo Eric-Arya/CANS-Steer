@@ -11,7 +11,7 @@ from pathlib import Path
 
 import torch
 
-from cans.data_processing import config, padded_batch, read_jsonl, save_tensor, sha256
+from cans.data_processing import config, padded_batch, read_jsonl, save_tensor, sha256, validate_fisher_binding
 from cans.gradient_fisher_extraction import response_gradients
 from cans.model_interventions import fold_scales, load_model, validate_model_source
 from cans.scaling_solver import cans_scales
@@ -249,6 +249,7 @@ def main(argv=None):
     validate_model_source(args.model or common['model'], common['model_config_sha256'])
     g_obj = torch.load(gradient, map_location='cpu', weights_only=True)
     f_obj = torch.load(fisher, map_location='cpu', weights_only=True)
+    fisher_binding = validate_fisher_binding(f_obj, common, reference, fisher)
     g = g_obj.get('gradient', g_obj.get('mean_g'))
     f = f_obj['fisher'].reshape(common['shape'])
     if g is None or list(g.shape) != common['shape'] or g.dtype != torch.float32:
@@ -276,6 +277,7 @@ def main(argv=None):
         revision=common.get('revision'), model_config_sha256=common['model_config_sha256'],
         config_sha256=sha256(args.config), evaluation_sha256=sha256(shared),
         gradient_sha256=sha256(gradient), fisher_sha256=sha256(fisher), reference_sha256=sha256(reference),
+        fisher_binding=fisher_binding,
         script_sha256=sha256(Path(__file__)), score_chunks=cached_sources, score_index=score_index,
         delta_sha256=hashlib.sha256(deltas.numpy().tobytes()).hexdigest(),
         epsilons=epsilon, damping=solved[0][1]['damping'], cap=None,

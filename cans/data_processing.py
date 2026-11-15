@@ -32,6 +32,75 @@ def sha256(path):
     return digest.hexdigest()
 
 
+def validate_fisher_binding(curvature, common, reference, artifact_path=None):
+    """Bind whole-response Fisher statistics to the actual model/reference input.
+
+    Release artifacts carry embedded metadata. Research extraction artifacts may
+    carry the same identities in a sibling ``metadata.json`` instead.
+    """
+    metadata = curvature.get("metadata")
+    metadata_path = None
+    if not isinstance(metadata, dict):
+        metadata_path = Path(artifact_path).with_name("metadata.json") if artifact_path else None
+        if metadata_path is None or not metadata_path.is_file():
+            raise ValueError("Fisher requires embedded or sibling extraction metadata")
+        metadata = json.loads(metadata_path.read_text())
+        recorded_hash = metadata.get("artifact_sha256")
+        if recorded_hash is not None and recorded_hash != sha256(artifact_path):
+            raise ValueError("Fisher extraction metadata belongs to another artifact")
+    if metadata.get("model_config_sha256") != common["model_config_sha256"]:
+        raise ValueError("Fisher belongs to another model")
+    if metadata.get("estimator") != "whole-response-logprob-gradient-square":
+        raise ValueError("Expected matching whole-response Fisher")
+    scope = metadata.get("scope", metadata.get("extraction_scope"))
+    if scope != "global/all-token":
+        raise ValueError("Fisher requires global/all-token extraction")
+    model_dtype = metadata.get("model_dtype", metadata.get("model_computation_dtype"))
+    if model_dtype != "float32":
+        raise ValueError("Fisher requires FP32 model computation")
+    if metadata.get("accumulator_dtype", "float64") != "float64":
+        raise ValueError("Fisher requires FP64 accumulation")
+    revision = metadata.get("revision")
+    if revision is not None and common.get("revision") is not None and revision != common["revision"]:
+        raise ValueError("Fisher belongs to another model revision")
+
+    reference = Path(reference)
+    reference_hash = sha256(reference)
+    hashes = [metadata[key] for key in ("data_sha256", "continuations_sha256") if key in metadata]
+    if not hashes or any(value != reference_hash for value in hashes):
+        raise ValueError("Fisher belongs to another reference corpus")
+    count = len(read_jsonl(reference))
+    expected = common.get("reference_generation", {})
+    configured_count = expected.get("num_prompts", 1) * expected.get("continuations_per_prompt", count)
+    counts = [metadata[key] for key in ("count", "continuation_count") if key in metadata]
+    if not counts or any(value != count for value in counts) or count != configured_count:
+        raise ValueError("Fisher/reference continuation count differs from configuration")
+
+    shape = tuple(common["shape"])
+    if len(shape) != 2 or any(type(size) is not int or size <= 0 for size in shape):
+        raise ValueError("Expected a positive [layers, intermediate_size] model shape")
+    tensor = curvature.get("fisher")
+    if not isinstance(tensor, torch.Tensor) or tensor.dtype not in (torch.float32, torch.float64):
+        raise ValueError("Fisher must be an FP32 or FP64 tensor")
+    if metadata.get("shape") is not None and tuple(metadata["shape"]) != shape:
+        raise ValueError("Fisher metadata shape differs from model coordinates")
+    flat_layer_major = (tensor.ndim == 1 and tensor.numel() == shape[0]*shape[1]
+                        and str(metadata.get("coordinate_order", "")).startswith("layer-major"))
+    if tuple(tensor.shape) != shape and not flat_layer_major:
+        raise ValueError("Fisher tensor shape differs from model coordinates")
+    if not tensor.isfinite().all() or (tensor < 0).any():
+        raise ValueError("Fisher must be finite and nonnegative")
+    companion = curvature.get("fisher_fp64")
+    if companion is not None:
+        if (not isinstance(companion, torch.Tensor) or companion.dtype != torch.float64
+                or companion.shape != tensor.shape or not companion.isfinite().all()
+                or (companion < 0).any() or not torch.equal(companion.float(), tensor.float())):
+            raise ValueError("Invalid or inconsistent FP64 Fisher companion")
+    return dict(model_config_sha256=common["model_config_sha256"], reference_sha256=reference_hash,
+                count=count, shape=list(shape), scope=scope, estimator=metadata["estimator"], model_dtype=model_dtype,
+                metadata_sha256=sha256(metadata_path) if metadata_path else None)
+
+
 def config(path):
     """Load a model or domain config relative to its project directory."""
     path = Path(path).resolve()

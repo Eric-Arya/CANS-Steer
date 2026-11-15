@@ -122,6 +122,10 @@ Higher is better. The summary also reports `true_percent`, `info_percent` and
 `true_info_failure_percent = 100 - true_info_percent`. Use `--judge-model` for
 a local truth judge and `--info-judge-model` for a local information judge.
 Both judges evaluate the same extracted current-question answer interval.
+Official remote judges load the revisions pinned in `configs/evaluation.yaml`.
+For custom remote checkpoints, `--judge-revision` and `--info-judge-revision`
+select explicit versions. Local judge overrides use local files and record their
+resolved paths and configuration hashes instead of applying a remote revision.
 
 Shared generation and scoring settings are centralized in
 [`configs/evaluation.yaml`](configs/evaluation.yaml). All model configurations
@@ -156,6 +160,10 @@ FP32 and supports `--resume`. Target-gradient extraction adds BOS only when
 it is absent from the formatted prompt; native Llama-3/3.1 chat templates
 already contain it. Resume requires matching data, settings and tokenization.
 Omit `--gradient` and `--fisher` to reuse the included statistics. Pass the resulting coefficients to `scripts/generate_responses.py`.
+Fisher inputs must bind the configured model and exact reference file, including
+its SHA-256, continuation count, extraction scope, precision and coordinates.
+Changing `reference_data` requires Fisher statistics extracted from that reference;
+a compatible tensor shape alone does not establish compatibility.
 
 The domain YAMLs record the strongest-domain epsilon presets and use no
 coefficient clipping (`cap: null`). Damping is computed from the median over
@@ -173,7 +181,11 @@ python scripts/cans_compute_neuron_scales.py \
 For Llama-2 and its derived checkpoints, IFEval scoring uses only the first
 response before a literal `### Instruction:` delimiter. The same preprocessing
 is used for strict and loose scoring; original generated text remains stored.
-Other models retain their existing IFEval scoring protocol.
+Other models retain their existing IFEval scoring protocol. The scoring CLI
+reads the model identity from generation metadata. For external saved responses
+without that metadata, provide `--model` with a recognized model ID or a local
+checkpoint containing `config.json`. Missing or conflicting model identity is
+rejected before scoring; `--model` does not change the saved generation.
 
 ## MBPP, MGSM, and aggregate capability
 
