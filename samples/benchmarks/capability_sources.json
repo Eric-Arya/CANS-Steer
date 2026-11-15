@@ -1,0 +1,32 @@
+{
+  "mbpp": {
+    "repository": "https://github.com/google-research/google-research/tree/master/mbpp",
+    "revision": "f46ca8374b4cddef97ca4208ad986049d74d296a",
+    "source_sha256": "ccf64ceae9c5403bf50a044cb6d505bfd2a2963ee58338ba268fd65beab92a9f",
+    "split": "all 500 original test tasks, IDs 11..510, source order",
+    "demonstration_ids": [
+      2,
+      3,
+      4
+    ],
+    "evaluation": "native Python execution; unmodified test_setup_code and all three test_list assertions; no repair or best-of selection",
+    "license": "See upstream dataset terms; original attribution and protocol retained in MBPP_README.md"
+  },
+  "mgsm": {
+    "repository": "https://github.com/google-research/url-nlp/tree/main/mgsm",
+    "revision": "452a21ad3dae5668c06ceeac21ff073e1e40f9be",
+    "split": "50 aligned questions per each of 11 languages",
+    "selection": "sorted(random.Random(42).sample(range(250),50))",
+    "selection_seed": 42,
+    "evaluation": "last signed number; normalize Unicode decimal digits and strip grouping commas; numeric exact match",
+    "license": "CC BY 4.0; MGSM_LICENSE"
+  },
+  "exported_files": {
+    "mbpp.jsonl": "a60951bced9c1770135dc1b296b542fbb23014106d8802f5c0957c1363a40652",
+    "mbpp_demonstrations.jsonl": "ce65392b056c96335486095cfac1e1c9751139be3b1589877c5ae7cda89aeb0c",
+    "mgsm.jsonl": "b3c3c5ad55a1172afa02eef8107989240e57160a3c2cf67d043a4e131b3d23dc",
+    "mgsm_exemplars.json": "60378436f326f15f384623e63139f70f63aa447289cc37b3b854ea9bc14c6dc0",
+    "MGSM_LICENSE": "c97deeeca4ae375a0334bc7f7af5f707aabfcec959c53c783b9f8771d28fd5b3",
+    "MBPP_README.md": "02d63a4ffdad806c3c87b5ea2aa91e946f6eec0c2869643b09831650883f41be"
+  }
+}

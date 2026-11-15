@@ -8,8 +8,10 @@ import torch
 def cans_scales(gradient, fisher, epsilon, damping=None, cap=None):
     """Maximize the signed steering objective under a diagonal quadratic budget.
 
-    Use F + damping in both the direction and the quadratic budget.
-    Clipping follows normalization and is never followed by renormalization.
+    Use F + damping in both the direction and the quadratic budget. Omitted
+    damping is the median over every Fisher coordinate, including zeros.
+    The current protocol deploys the unmodified solution (cap=None).
+    Explicit historical clipping follows normalization without renormalization.
     """
     g, f = gradient.double(), fisher.double()
     if g.shape != f.shape or g.ndim != 2 or not g.numel():
@@ -41,12 +43,14 @@ def cans_scales(gradient, fisher, epsilon, damping=None, cap=None):
     }
 
 
-def grad_only_scales(target_gradient, coefficient, cap, *, objective_sign=1):
+def grad_only_scales(target_gradient, coefficient, cap=None, *, objective_sign=1):
     """Identity-curvature CANS: retain every signed FP32 mean-gradient coordinate.
 
-    Use the comparison CANS cap unchanged and calibrate only ``coefficient``.
+    The current protocol is unclipped; vary only ``coefficient``.
     ``objective_sign`` is +1 for safety/hallucination and -1 for toxicity.
-    No ranking, Fisher division, damping, or normalization is applied.
+    ``target_gradient`` is the target log-probability gradient before applying
+    that task sign. No ranking, Fisher division, damping, or normalization is
+    applied. Explicit ``cap`` remains available for historical comparisons.
     """
     if (target_gradient.ndim != 2 or not target_gradient.numel()
             or target_gradient.dtype != torch.float32
@@ -63,23 +67,3 @@ def grad_only_scales(target_gradient, coefficient, cap, *, objective_sign=1):
         raise ValueError("coefficient times gradient is non-finite")
     delta = raw_delta if cap is None else raw_delta.clamp(-cap, cap)
     return 1 + objective_sign * delta
-
-
-def legacy_grad_only_scales(target_gradient, top_k, multiplier):
-    """Rank positive mean target gradients, then scale the selected coordinates.
-
-    Use a multiplier above one to promote the target, below one to suppress it.
-    Ranking uses the original target gradient even for suppressive steering.
-    """
-    if target_gradient.ndim != 2 or not target_gradient.isfinite().all():
-        raise ValueError("Expected finite [layers, intermediate_size] gradients")
-    if not math.isfinite(multiplier):
-        raise ValueError("multiplier must be finite")
-    flat = target_gradient.float().flatten()
-    if not isinstance(top_k, int) or not 0 < top_k <= int((flat > 0).sum()):
-        raise ValueError("top_k exceeds the positive-gradient neuron pool")
-    # Stable sorting makes tied coordinates follow layer-major order.
-    selected = torch.argsort(flat, descending=True, stable=True)[:top_k]
-    scales = torch.ones_like(flat, dtype=torch.float64)
-    scales[selected] = multiplier
-    return scales.reshape(target_gradient.shape)

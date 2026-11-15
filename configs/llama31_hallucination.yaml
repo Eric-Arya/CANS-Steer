@@ -3,11 +3,9 @@ domain: hallucination
 data: samples/llama31/hallucination.jsonl
 artifact: cans/artifacts/llama31/hallucination.pt
 objective_sign: 1
+cans:
+  epsilon: 0.00017459426695925925
+  damping: null
+  cap: null
 grad-only:
-  top_k: 1000
-  strengths:
-  - 0.1
-  - 0.2
-  - 0.3
-  - 0.4
-  - 0.5
+  coefficient: 0.529

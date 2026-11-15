@@ -9,23 +9,38 @@
     },
     {
       "path": "cans/artifacts/hallucination.pt",
-      "sha256": "aa7759d98ac8ffadab237921aa1c80c9fd32ab4cf552c508a9290c3102c38cee",
-      "bytes": 4205293
+      "sha256": "6d703b21eea31f196d6f7e30364d0ac82fef8ac68f4e444cf9809a85cc9cea79",
+      "bytes": 4205461
     },
     {
       "path": "cans/artifacts/safety.pt",
-      "sha256": "d681f6cd7677e1aa2650476509074cd5ca13cc8690028496f969b7b589eddeb9",
-      "bytes": 4205173
+      "sha256": "704792f603f04009109c47a465b3052c2d56fd414c2abfe1441a8cdaedfe8939",
+      "bytes": 4205277
     },
     {
       "path": "cans/artifacts/toxicity.pt",
-      "sha256": "77ce55fafa57fa80676152317484d89647cfdd6c71c8e45422f12a23c3239a54",
-      "bytes": 4205253
+      "sha256": "a053d46850af76e712d334c782db667fc1d3daa72aa552284fd5a180bb117f0a",
+      "bytes": 4205421
+    },
+    {
+      "path": "samples/benchmarks/MBPP_README.md",
+      "sha256": "02d63a4ffdad806c3c87b5ea2aa91e946f6eec0c2869643b09831650883f41be",
+      "bytes": 1422
+    },
+    {
+      "path": "samples/benchmarks/MGSM_LICENSE",
+      "sha256": "c97deeeca4ae375a0334bc7f7af5f707aabfcec959c53c783b9f8771d28fd5b3",
+      "bytes": 14990
     },
     {
       "path": "samples/benchmarks/bbh.jsonl",
       "sha256": "96f4b47c08070d76a8efe863b75237cfcf748701b031eed346ee7d56a006378c",
       "bytes": 601364
+    },
+    {
+      "path": "samples/benchmarks/capability_sources.json",
+      "sha256": "284a0f8c2be8b9f9918f4e558e250272defdbc7924175e0b68bcbf9da49c5b9d",
+      "bytes": 1681
     },
     {
       "path": "samples/benchmarks/harmbench.jsonl",
@@ -36,6 +51,26 @@
       "path": "samples/benchmarks/ifeval.jsonl",
       "sha256": "1ba6251bab5f1c6773cc4d4681d4f97d9c972b24758443045af7f135837231bc",
       "bytes": 382459
+    },
+    {
+      "path": "samples/benchmarks/mbpp.jsonl",
+      "sha256": "a60951bced9c1770135dc1b296b542fbb23014106d8802f5c0957c1363a40652",
+      "bytes": 302269
+    },
+    {
+      "path": "samples/benchmarks/mbpp_demonstrations.jsonl",
+      "sha256": "ce65392b056c96335486095cfac1e1c9751139be3b1589877c5ae7cda89aeb0c",
+      "bytes": 1523
+    },
+    {
+      "path": "samples/benchmarks/mgsm.jsonl",
+      "sha256": "b3c3c5ad55a1172afa02eef8107989240e57160a3c2cf67d043a4e131b3d23dc",
+      "bytes": 269425
+    },
+    {
+      "path": "samples/benchmarks/mgsm_exemplars.json",
+      "sha256": "60378436f326f15f384623e63139f70f63aa447289cc37b3b854ea9bc14c6dc0",
+      "bytes": 47921
     },
     {
       "path": "samples/benchmarks/mmlu.jsonl",
@@ -101,15 +136,18 @@
     },
     "cans/artifacts/safety.pt": {
       "source": "results/qwen3_4b/safety/grad_uniform/merged/gradients/all_neurons_mean_gradient.csv",
-      "sha256": "ae7bc76543840a059c517ee51b2b46e734bd36433a3e1350e3beb326bf580624"
+      "sha256": "ae7bc76543840a059c517ee51b2b46e734bd36433a3e1350e3beb326bf580624",
+      "coefficient_protocol": "published strongest-domain epsilon; full-coordinate median of current WikiText Fisher; cap=null"
     },
     "cans/artifacts/toxicity.pt": {
       "source": "results/qwen3_4b/toxicity/raw_grad_shared_n25_toxiccue_broad_v2/merged/gradients/all_neurons_mean_gradient.csv",
-      "sha256": "f95f991f0376b0e894edf21190ca27e11a383c3abf5b24004097295d4307e904"
+      "sha256": "f95f991f0376b0e894edf21190ca27e11a383c3abf5b24004097295d4307e904",
+      "coefficient_protocol": "published strongest-domain epsilon; full-coordinate median of current WikiText Fisher; cap=null"
     },
     "cans/artifacts/hallucination.pt": {
       "source": "results/qwen3_4b/hallucination/short_spans_v3_f5_bbh_tqa_v1/grad/merged/gradients/g_summary.pt",
-      "sha256": "5efabaae7076728b8be148dad038d7e1656a4487a3b3aafca0033c8fd3386612"
+      "sha256": "5efabaae7076728b8be148dad038d7e1656a4487a3b3aafca0033c8fd3386612",
+      "coefficient_protocol": "published strongest-domain epsilon; full-coordinate median of current WikiText Fisher; cap=null"
     },
     "samples/benchmarks/harmbench.jsonl": {
       "source": "results/qwen3_4b/safety/wikitext_whole_response_fisher_same_f1_f5_full_v1/eval/full/WF5/harmbench/responses.jsonl",
@@ -155,6 +193,38 @@
     "harmbench": {
       "url": "https://github.com/centerforaisafety/HarmBench.git",
       "revision": "8e1604d1171fe8a48d8febecd22f600e462bdcdd"
+    }
+  },
+  "capability_protocol": {
+    "mbpp": {
+      "repository": "https://github.com/google-research/google-research/tree/master/mbpp",
+      "revision": "f46ca8374b4cddef97ca4208ad986049d74d296a",
+      "source_sha256": "ccf64ceae9c5403bf50a044cb6d505bfd2a2963ee58338ba268fd65beab92a9f",
+      "split": "all 500 original test tasks, IDs 11..510, source order",
+      "demonstration_ids": [
+        2,
+        3,
+        4
+      ],
+      "evaluation": "native Python execution; unmodified test_setup_code and all three test_list assertions; no repair or best-of selection",
+      "license": "See upstream dataset terms; original attribution and protocol retained in MBPP_README.md"
+    },
+    "mgsm": {
+      "repository": "https://github.com/google-research/url-nlp/tree/main/mgsm",
+      "revision": "452a21ad3dae5668c06ceeac21ff073e1e40f9be",
+      "split": "50 aligned questions per each of 11 languages",
+      "selection": "sorted(random.Random(42).sample(range(250),50))",
+      "selection_seed": 42,
+      "evaluation": "last signed number; normalize Unicode decimal digits and strip grouping commas; numeric exact match",
+      "license": "CC BY 4.0; MGSM_LICENSE"
+    },
+    "exported_files": {
+      "mbpp.jsonl": "a60951bced9c1770135dc1b296b542fbb23014106d8802f5c0957c1363a40652",
+      "mbpp_demonstrations.jsonl": "ce65392b056c96335486095cfac1e1c9751139be3b1589877c5ae7cda89aeb0c",
+      "mgsm.jsonl": "b3c3c5ad55a1172afa02eef8107989240e57160a3c2cf67d043a4e131b3d23dc",
+      "mgsm_exemplars.json": "60378436f326f15f384623e63139f70f63aa447289cc37b3b854ea9bc14c6dc0",
+      "MGSM_LICENSE": "c97deeeca4ae375a0334bc7f7af5f707aabfcec959c53c783b9f8771d28fd5b3",
+      "MBPP_README.md": "02d63a4ffdad806c3c87b5ea2aa91e946f6eec0c2869643b09831650883f41be"
     }
   }
 }

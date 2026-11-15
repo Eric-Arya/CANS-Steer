@@ -112,10 +112,3 @@ h_neurons:
   selected_lambda: 0.182978364781
 grad_only:
   config: configs/toxicity.yaml
-  k: 8000
-  strengths:
-  - 0.1
-  - 0.2
-  - 0.3
-  - 0.4
-  - 0.5

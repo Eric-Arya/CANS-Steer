@@ -24,7 +24,7 @@ for a local copy of the configured model. Write run outputs under `outputs/`.
 | `extract.py` | Extract Grad/Fisher statistics, SN-Tune/DAP rankings, AurA scales, CAA vectors, or H-Neurons features |
 | `cans_compute_neuron_scales.py` | Solve CANS or Grad-only neuron scales |
 | `generate_responses.py` | Generate benchmark responses for CANS, Grad-only, all baselines, or the unmodified model |
-| `evaluate_responses.py` | Score generated responses with the matching frozen benchmark inputs |
+| `evaluate_responses.py` | Score generated responses and aggregate five complete capability benchmarks |
 
 ## Extraction
 
@@ -79,6 +79,10 @@ python scripts/evaluate_responses.py --benchmark bbh --bbh-protocol llama \
 Supply the matching model's frozen benchmark inputs. Llama BBH inputs must
 contain the paper's three worked demonstrations; choosing a scoring protocol
 does not change the prompts used to generate existing responses.
+
+MBPP and MGSM use the same generation/scoring entry points. Their frozen inputs,
+model-specific demonstrations, stopping rules and context limits are documented
+in the [main README](../README.md#mbpp-mgsm-and-aggregate-capability).
 
 ## Training and selection
 

@@ -12,7 +12,7 @@ import yaml
 from cans.data_processing import config as load_config, padded_batch, read_jsonl, sha256
 from cans.gradient_fisher_extraction import extract_statistics, response_gradients
 from cans.model_interventions import fold_scales, neuron_alphas
-from cans.scaling_solver import cans_scales, grad_only_scales, legacy_grad_only_scales
+from cans.scaling_solver import cans_scales, grad_only_scales
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -123,14 +123,6 @@ def test_closed_form_optimality_and_clipping():
     assert info["post_cap_cost"] <= info["pre_cap_cost"]
     base, _ = cans_scales(torch.zeros_like(g), f, 0.1, damping=0.3)
     assert torch.equal(base, torch.ones_like(g))
-
-
-def test_grad_only_ranking():
-    g = torch.tensor([[0.1, -3.0, 0.4, 0.4]])
-    result = legacy_grad_only_scales(g, 1, 0.5)
-    assert result.tolist() == [[1, 1, 0.5, 1]]
-    with pytest.raises(ValueError):
-        legacy_grad_only_scales(g, 4, 0)
 
 
 @pytest.mark.parametrize("sign", [-1, 1])

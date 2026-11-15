@@ -1,10 +1,12 @@
 """Extract CANS Grad/Fisher statistics or baseline neuron rankings and interventions."""
 
 import argparse
+import hashlib
+import json
 from pathlib import Path
 import torch
 
-from cans.data_processing import config, encode_span, read_jsonl, save_tensor, sha256
+from cans.data_processing import TARGET_TOKENIZATION_POLICY, config, encode_span, read_jsonl, save_tensor, sha256
 from cans.gradient_fisher_extraction import extract_statistics
 from cans.model_interventions import load_model, validate_model_source
 from baselines.common import load_config as load_baseline_config, metadata
@@ -21,6 +23,9 @@ def extract_grad(args):
                "data_sha256": sha256(source), "scope": "global/all-token",
                "objective": "mean-target-token-logprob", "model_dtype": "float32",
                "per_example_storage_dtype": "float16", "mean_dtype": "float32",
+               "tokenization_policy": TARGET_TOKENIZATION_POLICY,
+               "encoded_inputs_sha256": hashlib.sha256(json.dumps(rows, sort_keys=True,
+                   separators=(',', ':')).encode('utf-8')).hexdigest(),
                "count": len(rows)}
     mean = extract_statistics(model, rows, tokenizer.pad_token_id,
                               checkpoint=args.output.with_suffix(".checkpoint.pt"),

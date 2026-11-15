@@ -229,13 +229,13 @@ For domain selection only, pass
 path as `--benchmark-file` to scoring. The selection inputs retain benchmark
 metadata and formatting, including category-specific HarmBench judge fields.
 
-CANS-Grad-Only uses `cans_compute_neuron_scales.py --method grad-only --coefficient C`,
-then `generate_responses.py`. It applies `1 + objective_sign * clip(C*g, -cap, cap)`
-to all signed FP32 mean-gradient coordinates, with the same cap as CANS (or no
-clipping when CANS is uncapped). No Top-K, Fisher division, damping, or normalization
-is used. Calibrate C per model/domain. Old K/strength settings remain historical
-and are used only by `--method legacy-grad-only --strength S`.
-
+CANS-Grad-Only uses `cans_compute_neuron_scales.py --method grad-only`, then
+`generate_responses.py`. Its coefficient is read from the domain YAML, with
+`--coefficient C` available for a strength sweep. The update is
+`1 + objective_sign * C * target_gradient` over all signed FP32 coordinates,
+with no clipping, Top-K selection, Fisher division, damping, or normalization.
+The stored target gradient excludes the task sign, which the solver applies
+exactly once.
 ## Source attribution
 
 SN-Tune's importance calculation, GQA mapping, and sparse parameter updates

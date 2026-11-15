@@ -106,10 +106,3 @@ h_neurons:
   selected_lambda: 0.0503148713619
 grad_only:
   config: configs/hallucination.yaml
-  k: 1000
-  strengths:
-  - 0.1
-  - 0.2
-  - 0.3
-  - 0.4
-  - 0.5

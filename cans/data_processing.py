@@ -8,6 +8,9 @@ import torch
 import yaml
 
 
+TARGET_TOKENIZATION_POLICY = "target-boundary-prefix-plus-suffix_bos-if-absent_v2"
+
+
 def read_jsonl(path):
     with open(path, encoding="utf-8") as stream:
         return [json.loads(line) for line in stream if line.strip()]
@@ -35,10 +38,25 @@ def config(path):
     root = path.parent.parent
     domain = yaml.safe_load(path.read_text())
     if "model" in domain:
-        return root, domain, {}
+        return root, model_config(path), {}
     model_path = path.parent / domain.get("model_config", "model.yaml")
-    common = yaml.safe_load(model_path.read_text())
+    common = model_config(model_path)
     return root, common, domain
+
+
+def evaluation_config(path=None):
+    path = Path(path) if path else Path(__file__).resolve().parents[1]/"configs/evaluation.yaml"
+    return yaml.safe_load(path.read_text())
+
+
+def model_config(path):
+    path = Path(path)
+    common = yaml.safe_load(path.read_text())
+    shared = evaluation_config(path.parent/common["evaluation_config"] if common.get("evaluation_config") else None)
+    common.update(seed=shared["runtime"]["seed"], max_model_len=shared["runtime"]["max_model_len"],
+                  evaluation=shared["tasks"], evaluation_runtime=shared["runtime"],
+                  evaluation_protocol=shared)
+    return common
 
 
 def save_tensor(path, payload):
@@ -66,7 +84,10 @@ def encode_span(tokenizer, row):
         raise ValueError("format must be raw or chat")
     # Causality makes tokens after the target gradient-neutral. Keep them in the
     # input so alpha coverage always remains the complete non-padding sequence.
-    encoded = tokenizer(prefix + response[:end], add_special_tokens=True, return_offsets_mapping=True)
+    text = prefix + response[:end]
+    bos = getattr(tokenizer, "bos_token", None)
+    encoded = tokenizer(text, add_special_tokens=not bool(bos and text.startswith(bos)),
+                        return_offsets_mapping=True)
     # Preserve the target-boundary tokenization used by the frozen extraction.
     # Append the unscored suffix separately; it cannot change earlier logits.
     suffix_ids = tokenizer.encode(response[end:], add_special_tokens=False)

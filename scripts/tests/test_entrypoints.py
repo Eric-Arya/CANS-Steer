@@ -74,6 +74,7 @@ def test_transformers_generation_keeps_sampling_and_choice_protocol(monkeypatch,
             return 'A'
     class Model:
         device = 'cpu'
+        config = SimpleNamespace(max_position_embeddings=4096)
         def generate(self, ids, **kwargs):
             calls.append(kwargs)
             if benchmark == 'mmlu':
@@ -96,8 +97,9 @@ def test_prepare_release_checks_both_manifests_and_grouped_splits(tmp_path):
     report = tmp_path / 'audit.json'
     load_script('prepare_release').main(['--verify-only', '--output', str(report)])
     data = json.loads(report.read_text())
-    assert data['cans_files'] == 15 and data['baseline_files'] == 44
-    assert data['verified_files'] == 59
+    manifest = json.loads((Path(__file__).resolve().parents[2] / 'samples/manifest.json').read_text())
+    assert data['cans_files'] == len(manifest['files']) and data['baseline_files'] == 44
+    assert data['verified_files'] == len(manifest['files']) + 44
     assert set(data['domains']) == {'safety', 'toxicity', 'hallucination'}
     assert data['domains']['toxicity']['heldout_examples'] == 200
 

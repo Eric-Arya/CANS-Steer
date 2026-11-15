@@ -111,9 +111,23 @@ CUDA_VISIBLE_DEVICES=0 python scripts/evaluate_responses.py \
 | Toxicity | `rtp` | `cans/artifacts/toxicity.pt` |
 | Hallucination | `truthfulqa` | `cans/artifacts/hallucination.pt` |
 
-Both scripts also accept `ifeval`, `bbh`, and `mmlu`. Capability is their mean
-percentage score. Evaluation uses BF16 and the complete frozen benchmark inputs.
+Both scripts also accept `ifeval`, `bbh`, `mmlu`, `mbpp`, and `mgsm`. Paper
+Capability is the equal-weight mean of these five complete benchmark percentages. Evaluation uses BF16 and the complete frozen benchmark inputs.
 Omit `--scales` for the base model; use `--judge-model` for a local classifier.
+
+TruthfulQA's primary `score` is **True×Info (%)**: the fraction of responses
+accepted by both the official AllenAI truth and information judges. It is a
+same-response conjunction, not the product of the two aggregate percentages.
+Higher is better. The summary also reports `true_percent`, `info_percent` and
+`true_info_failure_percent = 100 - true_info_percent`. Use `--judge-model` for
+a local truth judge and `--info-judge-model` for a local information judge.
+Both judges evaluate the same extracted current-question answer interval.
+
+Shared generation and scoring settings are centralized in
+[`configs/evaluation.yaml`](configs/evaluation.yaml). All model configurations
+inherit its runtime, benchmark limits, sampling settings and judge rules.
+MBPP and MGSM use the model-specific prompting and context policies described
+below; the other released benchmarks retain the shared 4,096-token context.
 
 ## Main pipeline
 
@@ -138,16 +152,64 @@ python scripts/cans_compute_neuron_scales.py \
 ```
 
 Replace `safety` with `toxicity` or `hallucination` as needed. Extraction uses
-FP32 and supports `--resume`. Omit `--gradient` and `--fisher` to reuse the
+FP32 and supports `--resume`. New target-gradient extraction adds BOS only when
+it is absent from the formatted prompt; native Llama-3/3.1 chat templates
+already contain it. Changed tokenization cannot resume a historical extraction
+checkpoint. Frozen statistics retain their original provenance. Omit `--gradient` and `--fisher` to reuse the
 included statistics. Pass the resulting coefficients to `scripts/generate_responses.py`.
 
-For **CANS-Grad-Only**, first calibrate `COEFFICIENT` for the model/domain,
-then use the same cap as the CANS comparison (from the domain config):
+The domain YAMLs record the strongest-domain epsilon presets and use no
+coefficient clipping (`cap: null`). Damping is computed from the median over
+all coordinates of the model-matched WikiText Fisher. Artifacts record the resolved damping and their source statistics.
+
+For **CANS-Grad-Only**, use the coefficient recorded in the domain YAML, or
+pass `--coefficient` to evaluate another strength:
 
 ```bash
 python scripts/cans_compute_neuron_scales.py \
-  --config configs/safety.yaml --method grad-only --coefficient "$COEFFICIENT" \
+  --config configs/safety.yaml --method grad-only \
   --output outputs/safety_grad_only.pt
+```
+
+For Llama-2 and its derived checkpoints, IFEval scoring uses only the first
+response before a literal `### Instruction:` delimiter. The same preprocessing
+is used for strict and loose scoring; original generated text remains stored.
+Other models retain their existing IFEval scoring protocol.
+
+## MBPP, MGSM, and aggregate capability
+
+```bash
+python scripts/generate_responses.py --benchmark mbpp \
+  --scales cans/artifacts/safety.pt --output outputs/safety_mbpp.jsonl
+python scripts/evaluate_responses.py --benchmark mbpp \
+  --responses outputs/safety_mbpp.jsonl --output outputs/safety_mbpp_summary.json
+```
+
+Replace `mbpp` with `mgsm` for multilingual math. MBPP uses all 500 test
+problems (IDs 11–510), one greedy completion, and 512 response tokens. Native
+chat uses demonstrations 2/3/4 and three visible assertions. Llama-2 uses raw
+prompts, demonstration 2, and one visible assertion. Scoring executes the original
+setup and all three assertions, with no code repair or best-of selection.
+
+MGSM uses the same seed-42 selection of 50 aligned questions in each of 11
+languages. Native chat uses six ordered official native-language CoT examples,
+2,048 response tokens, and EOS/token-budget stopping. Llama-2 uses raw prompts
+within its native 4,096 context, with te=1, bn=3, th=4 and six examples for other
+languages; all official native next-question labels also stop generation. Only
+Telugu may reduce the response budget to the remaining context. Prompts and
+examples are never truncated. Numeric scoring extracts the last signed number,
+normalizes Unicode digits, and removes grouping commas.
+
+Both use greedy BF16 decoding and seed 112. Their context capacity is 8,192
+for instruction-tuned models and 4,096 for Llama-2. Aggregate capability requires
+complete IFEval-541, BBH-540, MMLU-570, MBPP-500 and MGSM-550 summaries from
+the same model and intervention; partial sets do not receive an average.
+
+```bash
+python scripts/evaluate_responses.py --aggregate \
+  outputs/safety_ifeval_summary.json outputs/safety_bbh_summary.json \
+  outputs/safety_mmlu_summary.json outputs/safety_mbpp_summary.json \
+  outputs/safety_mgsm_summary.json --output outputs/safety_capability.json
 ```
 
 ## Baselines

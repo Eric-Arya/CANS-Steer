@@ -3,14 +3,14 @@ import json
 from pathlib import Path
 import torch
 import yaml
-from cans.data_processing import read_jsonl, sha256, padded_batch
+from cans.data_processing import read_jsonl, sha256, padded_batch, model_config
 
 
 def load_config(path):
     path = Path(path).resolve()
     spec = yaml.safe_load(path.read_text())
     root = path.parent.parent.parent
-    common = yaml.safe_load((root / spec['model_config']).read_text())
+    common = model_config(root / spec['model_config'])
     return root, common, spec
 
 

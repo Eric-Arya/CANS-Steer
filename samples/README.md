@@ -59,6 +59,8 @@ formats and supervision settings.
 | `ifeval.jsonl` | 541 |
 | `bbh.jsonl` | 540 |
 | `mmlu.jsonl` | 570 |
+| `mbpp.jsonl` | 500 |
+| `mgsm.jsonl` | 550 |
 
 Benchmark rows retain frozen IDs, formatted prompts, and benchmark-specific
 scoring fields. `ifeval_scorer.zip` bundles the official IFEval scorer and its
@@ -81,3 +83,7 @@ python scripts/prepare_release.py --verify-only
 Datasets and bundled third-party components retain their original licenses.
 See [attribution](../README.md#attribution) and the
 [baseline sources](../baselines/README.md).
+
+MBPP/MGSM inputs preserve the official tasks and aligned sample IDs. Their
+model-specific prompts are rendered from these frozen inputs and demonstrations
+by the shared generation entry point; see the main README for the protocol.
